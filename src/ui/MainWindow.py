@@ -16,6 +16,10 @@ from ui.Animation import TabAnimation
 from ui.Text import TabText
 from ui.Preview import TabPreview
 
+from rendering.RenderManager import RenderManager
+from rendering.AnimationMode import SineWaveMode, SawtoothMode, RectangularMode, RaindropsMode, RainbowMode
+from rendering.ImageMode import ImageMode, GifMode
+
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, matrix):
         super().__init__()
@@ -27,6 +31,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("Matrix-App")
 
         self.matrix = matrix
+
+        self.renderer       = RenderManager(self.matrix_width, self.matrix_height, 30)
+        self.sine_mode      = SineWaveMode(self.matrix_width,self.matrix_height)
+        self.saw_mode       = SawtoothMode(self.matrix_width,self.matrix_height)
+        self.rect_mode      = RectangularMode(self.matrix_width,self.matrix_height)
+        self.rain_mode      = RaindropsMode(self.matrix_width,self.matrix_height)
+        self.rainbow_mode   = RainbowMode(self.matrix_width,self.matrix_height)
+        self.img_mode       = GifMode(self.matrix_width,self.matrix_height)
+
+        self.renderer.AddMode('sine', self.sine_mode)
+        self.renderer.AddMode('sawtooth', self.saw_mode)
+        self.renderer.AddMode('rectangular', self.rect_mode)
+        self.renderer.AddMode('rain', self.rain_mode)
+        self.renderer.AddMode('rainbow', self.rainbow_mode)
+        self.renderer.AddMode('image', self.img_mode)
 
         # set icon
         icon_path = Path(__file__).parent / "../../assets/top-hat.svg"
@@ -49,11 +68,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loadTab(TabAnimation())
         self.loadTab(TabMusic())
         self.loadTab(TabText())
-        self.loadTab(TabImage())
+        self.loadTab(TabImage(self.img_mode))
         tab_preview = TabPreview(self.matrix_width, self.matrix_height)
         self.loadTab(tab_preview)
 
         self.tab_bar.currentChanged.connect(self.stack.setCurrentIndex)
+
+        self.renderer.SetVirtualMatrix(tab_preview.preview_matrix)
+        self.renderer.Start()
+
+        #print(self.renderer.GetModes())
+        self.cb_mode_selection.addItems(self.renderer.GetModes())
+        self.cb_mode_selection.currentIndexChanged.connect(self.selectPreviewMode)
+        self.selectPreviewMode()
 
         # show main window
         self.show()
@@ -63,3 +90,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         layout = QVBoxLayout(page)
         layout.addWidget(content)
         self.stack.addWidget(page)
+
+    def selectPreviewMode(self):
+        mode = self.cb_mode_selection.currentText()
+        self.renderer.PreviewMode(mode)
+
+

@@ -5,16 +5,20 @@ import PySide6.QtCore as QtCore
 
 from pathlib import Path
 
+from rendering.ImageMode import GifMode
+
 # genrated ui
 from qt.generated.UI_image import Ui_TabImage
 
 class TabImage(QWidget, Ui_TabImage):
-    def __init__(self):
+    def __init__(self, img_mode: GifMode):
         super().__init__()
         self.setupUi(self)
         self.btn_open_file_dialog.clicked.connect(self.openFileDialog)
 
         self.selected_file = None
+
+        self.mode = img_mode
 
         self.img = None
 
@@ -37,6 +41,7 @@ class TabImage(QWidget, Ui_TabImage):
     def displayImage(self):
         self.img = QPixmap(self.selected_file)
         self.update_pixmap_size()
+        self.mode.open_img(str(self.selected_file))
 
     def resizeEvent(self, event):
         # Resize the pixmap when the window resizes
