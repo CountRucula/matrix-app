@@ -1,0 +1,9 @@
+#title, .title {{
+  font-size: 22px;
+  font-weight: bold;
+}}
+
+QLabel#img_path {{
+  border: 1px solid #6F6F6F;
+  padding: 5px;
+}}
