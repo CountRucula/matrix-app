@@ -4,9 +4,13 @@ import pyaudio
 import logging
 from abc import abstractmethod
 
+audio_client = None
+
 class MusicMode(RenderMode):
     def __init__(self, width, height):
         super().__init__(width, height)
+
+        self.p = pyaudio.PyAudio()
 
         self.max_peak = 1023
         self.frames = 1024
@@ -15,8 +19,17 @@ class MusicMode(RenderMode):
         self.stream = None
 
     def open_stream(self):
+        global audio_client
+
+        if audio_client:
+            audio_client.close_stream()
+            audio_client = None
+
         try:
-            self.stream = self.p.open(format=pyaudio.paInt16, channels=2, rate=self.rate, input=True, frames_per_buffer=self.frames)
+            self.stream = self.p.open(format=pyaudio.paInt16, channels=2, rate=self.rate, input=True, frames_per_buffer=self.frames, stream_callback=self.callback)
+
+            audio_client = self
+
         except Exception as e:
             logging.error(f"Audio device missing? {e}")
             self.stream = None
@@ -25,17 +38,20 @@ class MusicMode(RenderMode):
         self.stream.stop_stream()
         self.stream.close()
 
-    def callback(self, data, frame_count, time_info, status_flags):
+    @staticmethod
+    def callback(data, frame_count, time_info, status_flags):
+        global audio_client
+
         data = np.frombuffer(data, dtype=np.int16)
 
-        peak = self.find_peak(data)
-        self.draw_peak(peak)
+        peak = audio_client.find_peak(data)
+        audio_client.draw_peak(peak, (255,255,255))
 
         return (bytes(), pyaudio.paContinue)
 
     def find_peak(self, data: np.ndarray) -> float:
         peak = np.max(np.abs(data))
-        peak = int(peak * self.max_peak / 2 ** 16)
+        peak = int(peak * (self.max_peak / 2 ** 16))
 
         return peak
 
@@ -56,14 +72,15 @@ class TimelineMode(MusicMode):
     def __init__(self, width, height):
         super().__init__(width, height)
 
+        self.sensitivity = 75
+
     def draw_peak(self, peak: float, color):
         self.shift_left()
 
-        y_start = 0
-        y_end = int(peak * self.matrix.height // self.sensitivity)
+        y_start =  self.height - int(peak * self.height // self.sensitivity)
 
-        self.framebuffer[y_start:y_end, -1] = color
-        self.framebuffer[y_end:, -1]        = (0,0,0)
+        self.framebuffer[y_start:, -1] = color
+        self.framebuffer[:y_start, -1] = (0,0,0)
 
 class FrequencyBandsMode(RenderMode):
     def __init__(self, width, height):
