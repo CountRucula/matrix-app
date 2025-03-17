@@ -17,12 +17,16 @@ class TabPreview(QWidget, Ui_TabPreview):
         super().__init__()
         self.setupUi(self)
 
-        self.preview_matrix = LEDMatrixWidget(height, width, 20)
+        self.preview_matrix = LEDMatrixWidget(height, width, 20, self)
         self.verticalLayout.addWidget(self.preview_matrix)
 
         led_data = TabPreview.create_rainbow_matrix()
 
         self.preview_matrix.display(led_data)
+
+    def resizeEvent(self, event):
+        self.preview_matrix.update_led_size()
+        return super().resizeEvent(event)
     
     def create_rainbow_matrix(rows=20, cols=50):
         """Create a rainbow gradient on an LED matrix with RGB values."""

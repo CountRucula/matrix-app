@@ -8,7 +8,8 @@ class LEDMatrixWidget(QWidget):
         super().__init__(parent)
         self.rows = rows
         self.cols = cols
-        self.led_size = led_size
+
+        self.update_led_size()
 
         self.setMinimumSize(10,10)
 
@@ -30,6 +31,16 @@ class LEDMatrixWidget(QWidget):
         self.led_colors = colors
         self.update()
 
+    def update_led_size(self):
+        size    = self.parentWidget().size()
+        width   = size.width() - 20
+        height  = size.height() - 20
+
+        self.led_size = max(1, min(width // self.cols, height // self.rows))
+
+        self.offset_x = (width  - self.led_size*self.cols) // 2
+        self.offset_y = (height - self.led_size*self.rows) // 2
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -37,8 +48,8 @@ class LEDMatrixWidget(QWidget):
 
         for row in range(self.rows):
             for col in range(self.cols):
-                x = col * self.led_size
-                y = row * self.led_size
+                x = col * self.led_size + self.offset_x
+                y = row * self.led_size + self.offset_y
 
                 # Choose color based on LED state
                 color = QColor(*self.led_colors[row, col])
