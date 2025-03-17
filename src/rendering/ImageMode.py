@@ -8,7 +8,7 @@ class ImageMode(RenderMode):
     def __init__(self, width, height):
         super().__init__(width,height)
 
-        super().reset()
+        super().clear()
 
     def render(self):
         return self.framebuffer
@@ -20,7 +20,7 @@ class ImageMode(RenderMode):
         except Exception as e:
             logging.error(f"can't load image: {e}")
 
-    def reset(self):
+    def clear(self):
         pass
 
     def set_image(self, img: Image.Image):
@@ -47,13 +47,13 @@ class ImageMode(RenderMode):
         x_start = x_offset-width//2
         y_start = y_offset-height//2
 
-        super().reset()
+        super().clear()
         self.framebuffer[y_start:y_start+height, x_start:x_start+width] = pixels
 
 class GifMode(RenderMode):
     def __init__(self, width, height):
         super().__init__(width,height)
-        super().reset()
+        super().clear()
 
         self.start = time.time()
         self.idx = 0
@@ -113,7 +113,7 @@ class GifMode(RenderMode):
 
         self.frames = new_frames
         self.n_frames = len(self.frames)
-        self.reset()
+        self.clear()
 
 
     def resize_frame(self, img: Image.Image) -> Image.Image:

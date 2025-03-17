@@ -21,7 +21,7 @@ class WaveMode(RenderMode):
         t = time.time() % self.window
         y = self.evaluate(self.k*self.z + self.b*t)
 
-        self.reset()
+        self.clear()
 
         old_x = 0
         old_y = y[0]

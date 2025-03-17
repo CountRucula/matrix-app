@@ -8,7 +8,7 @@ class RenderMode(ABC):
         self.width = width
         self.height = height
 
-        self.reset()
+        self.clear()
 
     @abstractmethod
     def render(self):
@@ -92,7 +92,10 @@ class RenderMode(ABC):
         self.width = width
         self.height = height
 
-        self.reset()
+        self.clear()
 
     def reset(self):
+        self.clear()
+
+    def clear(self):
         self.framebuffer = np.zeros((self.height, self.width, 3), np.uint8)
