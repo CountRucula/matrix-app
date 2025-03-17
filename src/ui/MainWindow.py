@@ -3,7 +3,7 @@ from pathlib import Path
 # QT-Lib
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar
 from PySide6.QtGui import QIcon, QKeyEvent
-from PySide6.QtCore import Qt, QPoint, QObject
+from PySide6.QtCore import Qt, QPoint, QObject, QSize
 
 # genrated ui
 from qt.generated.UI_MainWindow import Ui_MainWindow
@@ -40,6 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.setWindowTitle("Matrix-App")
         self.setMinimumSize(100,100)
+        self.setWindowFlag(Qt.FramelessWindowHint)
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
@@ -69,6 +70,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         icon = QIcon(str(icon_path))
         self.setWindowIcon(icon)
 
+        # close button
+        icon_path = Path(__file__).parent / "../../assets/xmark.svg"
+        icon = QIcon(str(icon_path))
+        self.btn_close.setIcon(icon)
+        self.btn_close.setIconSize(QSize(20,20))
+        self.btn_close.clicked.connect(self.close)
+        self.btn_close.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
         # create tabs bar
         self.tab_bar = QTabBar()
         self.tab_bar.addTab("Settings")
@@ -78,8 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tab_bar.addTab("Image")
         self.tab_bar.addTab("Preview")
         self.tab_bar.setFocusPolicy(Qt.NoFocus)
-        self.title_layout.addWidget(self.tab_bar)
-        self.title_layout.addStretch()
+        self.title_layout.insertWidget(0, self.tab_bar)
 
         # add tab content
         self.loadTab(TabSettings(self.matrix))
@@ -103,10 +111,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.timeline_mode.open_stream()
 
-        #self.installEventFilter(KeyFilter())
-
         # show main window
-        self.show()
+        self.showMaximized()
 
     def loadTab(self, content: QWidget) -> None:
         page = QWidget()

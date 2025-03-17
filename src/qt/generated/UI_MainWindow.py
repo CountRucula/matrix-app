@@ -17,7 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout,
     QLabel, QLayout, QMainWindow, QPushButton,
-    QSizePolicy, QStackedWidget, QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QStackedWidget, QToolButton,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -31,7 +32,16 @@ class Ui_MainWindow(object):
         self.title_layout = QHBoxLayout()
         self.title_layout.setObjectName(u"title_layout")
         self.title_layout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.title_layout.setContentsMargins(-1, -1, -1, 0)
+        self.title_layout.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.title_layout.addItem(self.horizontalSpacer)
+
+        self.btn_close = QToolButton(self.centralwidget)
+        self.btn_close.setObjectName(u"btn_close")
+
+        self.title_layout.addWidget(self.btn_close)
+
 
         self.verticalLayout.addLayout(self.title_layout)
 
@@ -82,6 +92,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.lbl.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))
         self.lbl_current_mode.setText(QCoreApplication.translate("MainWindow", u"New Mode:", None))
         self.btn_activate_mode.setText(QCoreApplication.translate("MainWindow", u"Activate", None))
