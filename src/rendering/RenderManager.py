@@ -2,12 +2,16 @@ from threading import Thread
 from rendering.RenderMode import RenderMode
 from ui.LEDMatrix import LEDMatrixWidget
 import time
+import numpy as np
 
 class RenderManager:
     def __init__(self, width=50, height=20, fps=30):
         self.width = width
         self.height = height
+
         self.fps = fps
+        self.fps_mean = 0.0
+        self.fps_list = []
 
         self.modes = {}
 
@@ -53,8 +57,13 @@ class RenderManager:
         self.running = False
         self.thread.join()
 
+    def GetFPS(self) -> float:
+        return self.fps_mean
+
     def RenderLoop(self) -> None:
         frame_time = 1 / self.fps
+        old_start_time = time.time() - frame_time
+
         while self.running:
             try:
                 start_time = time.time()
@@ -71,6 +80,14 @@ class RenderManager:
                         
                     if self.virtual_matrix:
                         self.virtual_matrix.display(buffer)
+
+                self.fps_list.append(1/(start_time - old_start_time + 1e-6))
+
+                if len(self.fps_list) > self.fps:
+                    self.fps_list.pop(0)
+
+                self.fps_mean = np.mean(self.fps_list)
+                old_start_time = start_time
 
                 elapsed = time.time() - start_time
                 sleep_time = max(0, frame_time - elapsed)
