@@ -1,6 +1,5 @@
 from matrix.MatrixLink import MatrixLink
 from matrix.MatrixFormat import MatrixFormat, MatrixCommands
-from ui.LEDMatrix import LEDMatrixWidget
 import numpy as np
 import time
 
@@ -9,14 +8,9 @@ class Matrix:
         self.width = None
         self.heigth = None
 
-        self.preview = None
-
         self.fw_version = ""
 
         self.link = MatrixLink()
-
-    def SetPreview(self, preview: LEDMatrixWidget):
-        self.preview = preview
 
     def ListMatrices(self) -> list[str]:
         devices = self.link.ListDevices()
@@ -107,7 +101,8 @@ class Matrix:
 
             self.link.SetBaudRate(baudrate)
 
-    def SendData(self, data: np.ndarray):
+    def display(self, data: np.ndarray):
         if self.link.connected:
+            data = data.reshape(-1, data.shape[-1])  # flatten data (rows, cols, 3) => (rows*cols, 3)
             raw = MatrixFormat.BuildData(data)
             self.link.SendFrame(raw)
