@@ -39,6 +39,7 @@ class Ui_MainWindow(object):
 
         self.btn_close = QToolButton(self.centralwidget)
         self.btn_close.setObjectName(u"btn_close")
+        self.btn_close.setAutoFillBackground(False)
 
         self.title_layout.addWidget(self.btn_close)
 
@@ -59,16 +60,31 @@ class Ui_MainWindow(object):
 
         self.footer_layout = QHBoxLayout()
         self.footer_layout.setObjectName(u"footer_layout")
-        self.lbl = QLabel(self.centralwidget)
-        self.lbl.setObjectName(u"lbl")
+        self.lbl_fps = QLabel(self.centralwidget)
+        self.lbl_fps.setObjectName(u"lbl_fps")
 
-        self.footer_layout.addWidget(self.lbl)
+        self.footer_layout.addWidget(self.lbl_fps)
+
+        self.lbl_text_current_mode = QLabel(self.centralwidget)
+        self.lbl_text_current_mode.setObjectName(u"lbl_text_current_mode")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_text_current_mode.sizePolicy().hasHeightForWidth())
+        self.lbl_text_current_mode.setSizePolicy(sizePolicy)
+
+        self.footer_layout.addWidget(self.lbl_text_current_mode)
 
         self.lbl_current_mode = QLabel(self.centralwidget)
         self.lbl_current_mode.setObjectName(u"lbl_current_mode")
-        self.lbl_current_mode.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.footer_layout.addWidget(self.lbl_current_mode)
+
+        self.lbl_new_mode = QLabel(self.centralwidget)
+        self.lbl_new_mode.setObjectName(u"lbl_new_mode")
+        self.lbl_new_mode.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.footer_layout.addWidget(self.lbl_new_mode)
 
         self.cb_mode_selection = QComboBox(self.centralwidget)
         self.cb_mode_selection.setObjectName(u"cb_mode_selection")
@@ -93,8 +109,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.lbl.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))
-        self.lbl_current_mode.setText(QCoreApplication.translate("MainWindow", u"New Mode:", None))
+        self.lbl_fps.setText("")
+        self.lbl_text_current_mode.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))
+        self.lbl_current_mode.setText("")
+        self.lbl_new_mode.setText(QCoreApplication.translate("MainWindow", u"New Mode:", None))
         self.btn_activate_mode.setText(QCoreApplication.translate("MainWindow", u"Activate", None))
     # retranslateUi
 

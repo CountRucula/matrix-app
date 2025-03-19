@@ -3,7 +3,7 @@ from pathlib import Path
 # QT-Lib
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar
 from PySide6.QtGui import QIcon, QKeyEvent
-from PySide6.QtCore import Qt, QPoint, QObject, QSize
+from PySide6.QtCore import Qt, QPoint, QObject, QSize, QTimer
 
 # genrated ui
 from qt.generated.UI_MainWindow import Ui_MainWindow
@@ -111,6 +111,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.timeline_mode.open_stream()
 
+        # fps timer
+        self.fps_timer = QTimer(self)
+        self.fps_timer.timeout.connect(self.updateFPS)
+        self.fps_timer.setSingleShot(False)
+        self.fps_timer.start(1000)
+
         # show main window
         self.showMaximized()
 
@@ -123,6 +129,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def selectPreviewMode(self):
         mode = self.cb_mode_selection.currentText()
         self.renderer.PreviewMode(mode)
+
+    def updateFPS(self):
+        fps = self.renderer.GetFPS()
+        self.lbl_fps.setText(f"{fps:4.2f} FPS")
 
     def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key_Up:
