@@ -4,6 +4,7 @@ import enum
 from collections import deque
 import time
 import random
+from typing import Literal
 
 class Direction(enum.Enum):
     UP      = 0
@@ -285,5 +286,271 @@ class SnakeMode(RenderMode):
                 self.clear()
                 self.draw_apple()
                 self.draw_snake()
+
+        return self.framebuffer
+
+class PongMode(RenderMode):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+
+        self.ball_size = 2
+        self.ball_color = np.array((255,255,255))
+
+        self.player_length = 4
+        self.player_speed = 15.0
+        self.player_color = np.array((255,255,255))
+
+        self.start_time = time.time()
+
+        self.winning_score = 10
+
+        self.reset()
+
+    def reset(self):
+        self.game_running = False
+        self.ball = None
+        self.ball_speed = 0.0
+
+        self.player1 = self.height/2
+        self.player1_speed = 0
+        self.player1_score = 0
+
+        self.player2 = self.height/2
+        self.player2_speed = 0
+        self.player2_score = 0
+
+        self.round = 0
+        self.round_running = False
+        self.round_countdown = 1.0
+
+    def set_player_dir(self, player: int, direction: int):
+        direction = max(min(direction, 1), -1)
+
+        match player:
+            case 1:
+                self.player1_speed = direction * self.player_speed
+
+            case 2:
+                self.player2_speed = direction * self.player_speed
+
+    def move_ball(self, phi: int, delta_t: float):
+        # wrap phase
+        phi = (phi+np.pi) % (2*np.pi) - np.pi
+
+        x,y = self.ball
+
+        x += np.cos(phi) * self.ball_speed * delta_t
+        y += np.sin(phi) * self.ball_speed * delta_t
+
+        # reflect left 
+        if (1+self.ball_size/2 + 1e-6) >= x and not (-np.pi/2 < phi < np.pi/2):
+            if not self.handle_collision('left'):
+                self.round_over('right')
+
+            x = self.ball_size/2 + 1e-6
+        
+        # reflect right 
+        if x >= (self.width - 1 - self.ball_size/2 - 1e-6) and (-np.pi/2 < phi < np.pi/2):
+            if not self.handle_collision('right'):
+                self.round_over('left')
+
+            x = self.width - (self.ball_size/2 + 1e-6)
+
+        # reflect top 
+        if (self.ball_size/2 + 1e-6) >= y and (-np.pi < phi < 0):
+            self.ball_dir = -self.ball_dir
+            y = self.ball_size/2 + 1e-6
+        
+        # reflect bottom 
+        if y >= (self.height - self.ball_size/2 - 1e-6) and (0 < phi < np.pi):
+            self.ball_dir = -self.ball_dir
+            y = self.height - (self.ball_size/2 + 1e-6)
+
+        self.ball = (x,y)
+
+    def handle_collision(self, side: Literal['left', 'right']) -> bool:
+        _,yb = self.ball
+
+        if side == 'left':
+            self.ball_speed += 0.1*abs(self.player1_speed)
+
+            if (yb+self.ball_size/2) < self.player1:
+                return False
+
+            # top corner
+            elif yb < (self.player1 + self.ball_size/2):
+                if (self.ball_dir) > 0 or (self.ball_dir < -9/10*np.pi):
+                    self.ball_dir = -self.ball_dir - 4/3*np.pi
+                else:
+                    self.ball_dir = -self.ball_dir - np.pi
+
+                return True
+
+            # body
+            elif yb < (self.player1+self.player_length-self.ball_size/2):
+                self.ball_dir = -self.ball_dir - np.pi
+                return True
+
+            # bottom corner
+            elif (yb-self.ball_size/2) < (self.player1 + self.player_length):
+                if (self.ball_dir < 0) or (self.ball_dir > 9/10*np.pi):
+                    self.ball_dir = -self.ball_dir - 2/3*np.pi
+                else:
+                    self.ball_dir = -self.ball_dir - np.pi
+
+                return True
+
+            else:
+                return False
+        else:
+            self.ball_speed += 0.1*abs(self.player2_speed)
+
+            if (yb+self.ball_size/2) < self.player2:
+                return False
+
+            # top corner
+            elif yb < (self.player2 + self.ball_size/2):
+                if self.ball_dir > -np.pi/10:
+                    self.ball_dir = -self.ball_dir + 4/3*np.pi
+                else:
+                    self.ball_dir = -self.ball_dir - np.pi
+
+                return True
+
+            # body
+            elif yb < (self.player2+self.player_length-self.ball_size/2):
+                self.ball_dir = -self.ball_dir - np.pi
+                return True
+
+            # bottom corner
+            elif (yb-self.ball_size/2) < (self.player2 + self.player_length):
+                if self.ball_dir > np.pi/10:
+                    self.ball_dir = -self.ball_dir - np.pi
+                else:
+                    self.ball_dir = -self.ball_dir + 2/3*np.pi
+                return True
+
+            else:
+                return False
+
+
+    def game_start(self):
+        self.reset()
+        self.round_start()
+
+        self.game_running = True
+
+    def round_start(self):
+        self.player1 = self.height/2
+        self.player1_speed = 0
+
+        self.player2 = self.height/2
+        self.player2_speed = 0
+
+        self.ball_speed = 20.0
+        self.ball_dir = (np.random.random() * np.pi/2) - np.pi/4 - (np.random.randint(0, 2)*np.pi)
+        self.ball = (self.width/2, self.height/2)
+
+        self.round_running = True
+        self.round += 1
+        print(f"round {self.round}, player-1: {self.player1_score}, player-2: {self.player2_score}")
+
+    def round_over(self, winner: Literal['left', 'right']):
+        self.round_running = False
+        self.round_countdown = 1.0
+
+        if winner == 'left':
+            self.player1_score += 1
+
+            if self.player1_score >= self.winning_score:
+                self.game_over()
+
+        elif winner == 'right':
+            self.player2_score += 1
+
+            if self.player2_score >= self.winning_score:
+                self.game_over()
+
+    def game_over(self):
+        self.ball_speed = 0
+        self.game_running = False
+        print("game-over")
+
+    def move_player(self, pos: int, speed: float, delta_t: float):
+        pos += speed * delta_t
+
+        pos = max(pos, 0)
+        pos = min(pos, self.height - self.player_length - 1e-6)
+
+        return pos
+
+    def draw_ball(self):
+        x,y = self.ball
+
+        x -= self.ball_size/2
+        y -= self.ball_size/2
+
+        ix = int(x)
+        iy = int(y)
+
+        intensity_right = x - ix
+        intensity_left  = 1 - intensity_right
+
+        intensity_bot   = y - iy
+        intensity_top   = 1 - intensity_bot
+
+        # corners
+        self.framebuffer[iy,                ix]                 = self.ball_color * intensity_top * intensity_left  # top-left
+        self.framebuffer[iy,                ix+self.ball_size]  = self.ball_color * intensity_top * intensity_right # top-right
+        self.framebuffer[iy+self.ball_size, ix]                 = self.ball_color * intensity_bot * intensity_left  # bottom-left
+        self.framebuffer[iy+self.ball_size, ix+self.ball_size]  = self.ball_color * intensity_bot * intensity_right # bottom-right
+
+        # edges
+        self.framebuffer[iy,                        ix+1:ix+self.ball_size] = self.ball_color * intensity_top   # top
+        self.framebuffer[iy+self.ball_size,         ix+1:ix+self.ball_size] = self.ball_color * intensity_bot   # bottom
+        self.framebuffer[iy+1:iy+self.ball_size,    ix]                     = self.ball_color * intensity_left  # left
+        self.framebuffer[iy+1:iy+self.ball_size,    ix+self.ball_size]      = self.ball_color * intensity_right # right
+
+        # body
+        self.framebuffer[iy+1:iy+self.ball_size, ix+1:ix+self.ball_size] = self.ball_color
+
+    def draw_player(self, x, pos):
+        ipos_start = int(pos)
+        ipos_end = ipos_start+self.player_length
+
+        self.framebuffer[ipos_start,            x] = self.player_color * (ipos_start + 1 - pos)
+        self.framebuffer[ipos_start+1:ipos_end, x] = self.player_color
+        self.framebuffer[ipos_end,              x] = self.player_color * (pos - ipos_start)
+
+    def render(self):
+        elapsed = time.time() - self.start_time
+        self.start_time = time.time()
+
+        # clear buffer
+        self.clear()
+
+        if self.game_running:
+
+            if not self.round_running:
+                self.round_start()
+
+            if self.round_countdown <= 0:
+                # move players
+                self.player1 = self.move_player(self.player1, self.player1_speed, elapsed)
+                self.player2 = self.move_player(self.player2, self.player2_speed, elapsed)
+
+                # move ball
+                if self.ball is not None:
+                    self.move_ball(self.ball_dir, elapsed)
+
+            else:
+                self.round_countdown -= elapsed
+            
+        # draw objects
+        if self.ball is not None:    
+            self.draw_ball()
+
+        self.draw_player(0, self.player1)
+        self.draw_player(-1, self.player2)
 
         return self.framebuffer
