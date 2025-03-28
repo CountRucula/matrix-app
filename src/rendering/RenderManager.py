@@ -1,11 +1,12 @@
 from threading import Thread
 from rendering.RenderMode import RenderMode
 from ui.LEDMatrix import LEDMatrixWidget
+from matrix.Matrix import Matrix
 import time
 import numpy as np
 
 class RenderManager:
-    def __init__(self, width=50, height=20, fps=30):
+    def __init__(self, width=50, height=20, fps=30, on_mode_changed=None, on_preview_mode_changed=None):
         self.width = width
         self.height = height
 
@@ -18,8 +19,11 @@ class RenderManager:
         self.active_mode: RenderMode | None = None
         self.preview_mode: RenderMode | None = None
 
-        self.hardware_matrix = None
-        self.virtual_matrix = None
+        self.hardware_matrix: Matrix = None
+        self.virtual_matrix: LEDMatrixWidget = None
+
+        self.on_mode_changed = on_mode_changed
+        self.on_preview_mode_changed = on_preview_mode_changed
 
     def SetSize(self, width, height) -> None:
         self.width = width
@@ -27,6 +31,9 @@ class RenderManager:
 
     def SetVirtualMatrix(self, matrix: LEDMatrixWidget):
         self.virtual_matrix = matrix
+
+    def SetMatrix(self, matrix: Matrix):
+        self.hardware_matrix = matrix
 
     def AddMode(self, name: str, mode: RenderMode) -> None:
         self.modes[name] = mode
@@ -37,6 +44,7 @@ class RenderManager:
     def SelectMode(self, name: str) -> None:
         if name in self.modes:
             self.active_mode = self.modes[name]
+            self.on_mode_changed(name)
 
             if self.active_mode != self.preview_mode:
                 self.active_mode.reset()
@@ -44,6 +52,7 @@ class RenderManager:
     def PreviewMode(self, name: str) -> None:
         if name in self.modes:
             self.preview_mode = self.modes[name]
+            self.on_preview_mode_changed(name)
 
             if self.preview_mode != self.active_mode:
                 self.preview_mode.reset()

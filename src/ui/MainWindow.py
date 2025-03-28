@@ -1,4 +1,5 @@
 from pathlib import Path
+import numpy as np
 
 # QT-Lib
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar
@@ -15,12 +16,11 @@ from ui.Music import TabMusic
 from ui.Animation import TabAnimation
 from ui.Text import TabText
 from ui.Preview import TabPreview
+from ui.Game import TabGame
 
 from rendering.RenderManager import RenderManager
 from rendering.AnimationMode import SineWaveMode, SawtoothMode, RectangularMode, RaindropsMode, RainbowMode
-from rendering.ImageMode import ImageMode, GifMode
-from rendering.MusicMode import TimelineMode
-from rendering.GameMode import SnakeMode, Direction
+from rendering.MusicMode import TimelineMode, FrequencyBandsMode
 
 class KeyFilter(QObject):
     def eventFilter(self, obj, event):
@@ -35,35 +35,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
+        # matrix dimensions
         self.matrix_width = 50
         self.matrix_height = 20
 
+        # window attributes
         self.setWindowTitle("Matrix-App")
         self.setMinimumSize(100,100)
         self.setWindowFlag(Qt.FramelessWindowHint)
-
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
+        # matrix connection
         self.matrix = matrix
 
-        self.renderer       = RenderManager(self.matrix_width, self.matrix_height, 30)
-        self.sine_mode      = SineWaveMode(self.matrix_width,self.matrix_height)
-        self.saw_mode       = SawtoothMode(self.matrix_width,self.matrix_height)
-        self.rect_mode      = RectangularMode(self.matrix_width,self.matrix_height)
-        self.rain_mode      = RaindropsMode(self.matrix_width,self.matrix_height)
-        self.rainbow_mode   = RainbowMode(self.matrix_width,self.matrix_height)
-        self.img_mode       = GifMode(self.matrix_width,self.matrix_height)
-        self.timeline_mode  = TimelineMode(self.matrix_width, self.matrix_height)
-        self.snake_mode     = SnakeMode(self.matrix_width, self.matrix_height)
-
-        self.renderer.AddMode('Sine', self.sine_mode)
-        self.renderer.AddMode('Sawtooth', self.saw_mode)
-        self.renderer.AddMode('Rectangular', self.rect_mode)
-        self.renderer.AddMode('Rain', self.rain_mode)
-        self.renderer.AddMode('Rainbow', self.rainbow_mode)
-        self.renderer.AddMode('Image', self.img_mode)
-        self.renderer.AddMode('Timeline', self.timeline_mode)
-        self.renderer.AddMode('Snake', self.snake_mode)
+        # register render modes
+        self.renderer = RenderManager(
+            self.matrix_width,
+            self.matrix_height,
+            30,
+            on_mode_changed=self.lbl_current_mode.setText,
+            on_preview_mode_changed=self.lbl_preview_mode.setText,
+        )
 
         # set icon
         icon_path = Path(__file__).parent / "../../assets/top-hat.svg"
@@ -78,39 +70,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btn_close.clicked.connect(self.close)
         self.btn_close.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
-        # create tabs bar
+        # create tab bar
         self.tab_bar = QTabBar()
-        self.tab_bar.addTab("Settings")
-        self.tab_bar.addTab("Animation")
-        self.tab_bar.addTab("Music")
-        self.tab_bar.addTab("Text")
-        self.tab_bar.addTab("Image")
-        self.tab_bar.addTab("Preview")
         self.tab_bar.setFocusPolicy(Qt.NoFocus)
         self.title_layout.insertWidget(0, self.tab_bar)
 
-        # add tab content
-        self.loadTab(TabSettings(self.matrix))
-        self.loadTab(TabAnimation())
-        self.loadTab(TabMusic())
-        self.loadTab(TabText())
-        self.loadTab(TabImage(self.img_mode))
-        tab_preview = TabPreview(self.matrix_width, self.matrix_height)
-        self.loadTab(tab_preview)
+        # add tab content 
+        self.tab_settings   = TabSettings(self, self.matrix, self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_animation  = TabAnimation(self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_game       = TabGame(self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_music      = TabMusic(self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_text       = TabText()
+        self.tab_image      = TabImage(self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_preview    = TabPreview(self.matrix_width, self.matrix_height)
 
+        self.loadTab('Settings', self.tab_settings)
+        self.loadTab('Animation', self.tab_animation)
+        self.loadTab('Game', self.tab_game)
+        self.loadTab('Music', self.tab_music)
+        self.loadTab('Text', self.tab_text)
+        self.loadTab('Image', self.tab_image)
+        self.loadTab('Preview', self.tab_preview)
         self.tab_bar.currentChanged.connect(self.stack.setCurrentIndex)
 
-        self.renderer.SetVirtualMatrix(tab_preview.preview_matrix)
+        # add preview matrix & hardware matrix to renderer
+        self.renderer.SetVirtualMatrix(self.tab_preview.preview_matrix)
+        self.renderer.SetMatrix(self.matrix)
         self.renderer.Start()
-
-        #print(self.renderer.GetModes())
-        self.cb_mode_selection.addItems(self.renderer.GetModes())
-        self.cb_mode_selection.currentIndexChanged.connect(self.selectPreviewMode)
-        self.cb_mode_selection.setFocusPolicy(Qt.NoFocus)
-        self.selectPreviewMode()
-
-        self.timeline_mode.open_stream()
-
+        
         # fps timer
         self.fps_timer = QTimer(self)
         self.fps_timer.timeout.connect(self.updateFPS)
@@ -120,7 +107,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # show main window
         self.showMaximized()
 
-    def loadTab(self, content: QWidget) -> None:
+    def loadTab(self, name: str, content: QWidget) -> None:
+        self.tab_bar.addTab(name)
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.addWidget(content)
@@ -130,24 +118,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         mode = self.cb_mode_selection.currentText()
         self.renderer.PreviewMode(mode)
 
+    def selectMode(self):
+        mode = self.cb_mode_selection.currentText()
+        self.renderer.SelectMode(mode)
+        self.lbl_current_mode.setText(mode)
+    
     def updateFPS(self):
         fps = self.renderer.GetFPS()
-        self.lbl_fps.setText(f"{fps:4.2f} FPS")
+        self.lbl_fps.setText(f"{fps:4.2f}")
 
     def keyPressEvent(self, event: QKeyEvent):
-        if event.key() == Qt.Key_Up:
-            self.snake_mode.change_direction(Direction.UP)
-        elif event.key() == Qt.Key_Down:
-            self.snake_mode.change_direction(Direction.DOWN)
-        elif event.key() == Qt.Key_Left:
-            self.snake_mode.change_direction(Direction.LEFT)
-        elif event.key() == Qt.Key_Right:
-            self.snake_mode.change_direction(Direction.RIGHT)
-        elif event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            self.snake_mode.start_pause()
-            print("Game Start / Restart!")
-
+        self.tab_game.keyPressEvent(event)
         super().keyPressEvent(event)
 
-        print(f"Direction: {self.snake_mode.new_dir}")
-
+    def keyReleaseEvent(self, event):
+        self.tab_game.keyReleaseEvent(event)
+        return super().keyReleaseEvent(event)

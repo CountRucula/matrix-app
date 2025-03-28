@@ -35,6 +35,7 @@ class Ui_TabImage(object):
 
         self.img_path = QLabel(TabImage)
         self.img_path.setObjectName(u"img_path")
+        self.img_path.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout.addWidget(self.img_path)
 
@@ -61,6 +62,11 @@ class Ui_TabImage(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
+        self.btn_preview = QPushButton(TabImage)
+        self.btn_preview.setObjectName(u"btn_preview")
+
+        self.horizontalLayout_2.addWidget(self.btn_preview)
+
         self.btn_display = QPushButton(TabImage)
         self.btn_display.setObjectName(u"btn_display")
 
@@ -80,6 +86,7 @@ class Ui_TabImage(object):
         self.btn_open_file_dialog.setText(QCoreApplication.translate("TabImage", u"Open File", None))
         self.img_path.setText("")
         self.img_container.setText("")
+        self.btn_preview.setText(QCoreApplication.translate("TabImage", u"Preview", None))
         self.btn_display.setText(QCoreApplication.translate("TabImage", u"Display", None))
     # retranslateUi
 

@@ -5,22 +5,29 @@ import PySide6.QtCore as QtCore
 
 from pathlib import Path
 
-from rendering.ImageMode import GifMode
+from rendering.RenderManager import RenderManager
+from rendering.ImageMode import ImageMode, GifMode
 
 # genrated ui
 from qt.generated.UI_image import Ui_TabImage
 
 class TabImage(QWidget, Ui_TabImage):
-    def __init__(self, img_mode: GifMode):
+    def __init__(self, renderer: RenderManager, width, height):
         super().__init__()
         self.setupUi(self)
+        self.renderer = renderer
+
+        # button callbacks
         self.btn_open_file_dialog.clicked.connect(self.openFileDialog)
+        self.btn_display.clicked.connect(self.displayImage)
+        self.btn_preview.clicked.connect(self.previewImage)
 
         self.selected_file = None
-
-        self.mode = img_mode
-
         self.img = None
+
+        self.mode = GifMode(width, height)
+        self.mode_name = 'Image'
+        self.renderer.AddMode(self.mode_name, self.mode)
 
     def openFileDialog(self):
         dialog = QFileDialog()
@@ -35,13 +42,15 @@ class TabImage(QWidget, Ui_TabImage):
                 print(f'selected file: "{self.selected_file}"')
 
                 self.img_path.setText(str(self.selected_file))
-
-                self.displayImage()
+                self.img = QPixmap(self.selected_file)
+                self.update_pixmap_size()
+                self.mode.open_img(str(self.selected_file))
 
     def displayImage(self):
-        self.img = QPixmap(self.selected_file)
-        self.update_pixmap_size()
-        self.mode.open_img(str(self.selected_file))
+        self.renderer.SelectMode(self.mode_name)
+
+    def previewImage(self):
+        self.renderer.PreviewMode(self.mode_name)
 
     def resizeEvent(self, event):
         # Resize the pixmap when the window resizes

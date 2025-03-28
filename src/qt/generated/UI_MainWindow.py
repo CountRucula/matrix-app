@@ -15,10 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout,
-    QLabel, QLayout, QMainWindow, QPushButton,
-    QSizePolicy, QSpacerItem, QStackedWidget, QToolButton,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
+    QLayout, QMainWindow, QSizePolicy, QSpacerItem,
+    QStackedWidget, QToolButton, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -60,41 +59,83 @@ class Ui_MainWindow(object):
 
         self.footer_layout = QHBoxLayout()
         self.footer_layout.setObjectName(u"footer_layout")
-        self.lbl_fps = QLabel(self.centralwidget)
-        self.lbl_fps.setObjectName(u"lbl_fps")
-
-        self.footer_layout.addWidget(self.lbl_fps)
-
-        self.lbl_text_current_mode = QLabel(self.centralwidget)
-        self.lbl_text_current_mode.setObjectName(u"lbl_text_current_mode")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        self.label_1 = QLabel(self.centralwidget)
+        self.label_1.setObjectName(u"label_1")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_text_current_mode.sizePolicy().hasHeightForWidth())
-        self.lbl_text_current_mode.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.label_1.sizePolicy().hasHeightForWidth())
+        self.label_1.setSizePolicy(sizePolicy)
+        self.label_1.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.footer_layout.addWidget(self.lbl_text_current_mode)
+        self.footer_layout.addWidget(self.label_1)
+
+        self.lbl_matrix_status = QLabel(self.centralwidget)
+        self.lbl_matrix_status.setObjectName(u"lbl_matrix_status")
+        sizePolicy.setHeightForWidth(self.lbl_matrix_status.sizePolicy().hasHeightForWidth())
+        self.lbl_matrix_status.setSizePolicy(sizePolicy)
+
+        self.footer_layout.addWidget(self.lbl_matrix_status)
+
+        self.line_2 = QFrame(self.centralwidget)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShape(QFrame.Shape.VLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.footer_layout.addWidget(self.line_2)
+
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy)
+        self.label_2.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.footer_layout.addWidget(self.label_2)
+
+        self.lbl_preview_mode = QLabel(self.centralwidget)
+        self.lbl_preview_mode.setObjectName(u"lbl_preview_mode")
+
+        self.footer_layout.addWidget(self.lbl_preview_mode)
+
+        self.line_3 = QFrame(self.centralwidget)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.Shape.VLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.footer_layout.addWidget(self.line_3)
+
+        self.label_4 = QLabel(self.centralwidget)
+        self.label_4.setObjectName(u"label_4")
+        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy)
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.footer_layout.addWidget(self.label_4)
 
         self.lbl_current_mode = QLabel(self.centralwidget)
         self.lbl_current_mode.setObjectName(u"lbl_current_mode")
 
         self.footer_layout.addWidget(self.lbl_current_mode)
 
-        self.lbl_new_mode = QLabel(self.centralwidget)
-        self.lbl_new_mode.setObjectName(u"lbl_new_mode")
-        self.lbl_new_mode.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.line_4 = QFrame(self.centralwidget)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.Shape.VLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.footer_layout.addWidget(self.lbl_new_mode)
+        self.footer_layout.addWidget(self.line_4)
 
-        self.cb_mode_selection = QComboBox(self.centralwidget)
-        self.cb_mode_selection.setObjectName(u"cb_mode_selection")
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.footer_layout.addWidget(self.cb_mode_selection)
+        self.footer_layout.addWidget(self.label_3)
 
-        self.btn_activate_mode = QPushButton(self.centralwidget)
-        self.btn_activate_mode.setObjectName(u"btn_activate_mode")
+        self.lbl_fps = QLabel(self.centralwidget)
+        self.lbl_fps.setObjectName(u"lbl_fps")
 
-        self.footer_layout.addWidget(self.btn_activate_mode)
+        self.footer_layout.addWidget(self.lbl_fps)
 
 
         self.verticalLayout.addLayout(self.footer_layout)
@@ -109,10 +150,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.label_1.setText(QCoreApplication.translate("MainWindow", u"Matrix Status:", None))
+        self.lbl_matrix_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
+        self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))
+        self.lbl_current_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"FPS:", None))
         self.lbl_fps.setText("")
-        self.lbl_text_current_mode.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))
-        self.lbl_current_mode.setText("")
-        self.lbl_new_mode.setText(QCoreApplication.translate("MainWindow", u"New Mode:", None))
-        self.btn_activate_mode.setText(QCoreApplication.translate("MainWindow", u"Activate", None))
     # retranslateUi
 

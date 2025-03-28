@@ -28,6 +28,9 @@
        <property name="text">
         <string/>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
       </widget>
      </item>
     </layout>
@@ -74,6 +77,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_preview">
+       <property name="text">
+        <string>Preview</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_display">
