@@ -17,7 +17,8 @@ def main():
 
   # load stylesheet
   #app.setStyleSheet(Path('./qt/design/MainWindow.qss').read_text())
-  apply_stylesheet(app, theme='dark_teal.xml', css_file='ui/style.css')
+  stylesheet = (Path(__file__).parent / 'ui/style.css').resolve()
+  apply_stylesheet(app, theme='dark_teal.xml', css_file=str(stylesheet))
 
   # create Matrix
   matrix = Matrix()
