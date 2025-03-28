@@ -39,9 +39,11 @@ class Matrix:
 
 
     def Connect(self, dev: str):
+        self.link.baudrate = 115200
         self.link.Connect(dev)
 
     def Disconnect(self):
+        self.ClearFrame()
         self.link.Disconnect()
 
     def SendAndWait(self, raw: bytes, timeout: float | None = None) -> tuple[MatrixCommands, dict]:
