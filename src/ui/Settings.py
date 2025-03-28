@@ -104,3 +104,17 @@ class TabSettings(QWidget, Ui_TabSettings):
 
         self.cb_matrix_ports.clear()
         self.cb_matrix_ports.addItems(devices)
+
+    def connect_callback(self):
+        if self.connected:
+            self.matrix.Disconnect()
+            self.connected = False
+            self.btn_matrix_connect.setText("Connect")
+            self.parent.lbl_matrix_status.setText("Disconnected")
+        else:
+            dev = self.cb_matrix_ports.currentText()
+            self.matrix.Connect(dev)
+            self.baudrate_changed()
+            self.connected = True
+            self.btn_matrix_connect.setText("Disconnect")
+            self.parent.lbl_matrix_status.setText("Connected")
