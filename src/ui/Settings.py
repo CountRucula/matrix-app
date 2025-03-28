@@ -25,8 +25,9 @@ class TabSettings(QWidget, Ui_TabSettings):
         # title
         self.lbl_frackstock_conn.setProperty('class', 'title')
         self.lbl_matrix_conn.setProperty('class', 'title')
+        self.lbl_gamma_corr.setProperty('class', 'title')
 
-
+        # icons
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'
         icon = QIcon(str(icon_path))
 
@@ -44,6 +45,51 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.baudrate: int = 115200
         self.populate_combo_boxes()
         self.cb_matrix_baudrates.currentTextChanged.connect(self.baudrate_changed)
+
+        # gamma correction
+        self.gamma_mode = TestGammaMode(width, height)
+        self.gamma_mode_name = 'Gamma-Correction'
+        self.renderer.AddMode(self.gamma_mode_name, self.gamma_mode)
+
+        self.btn_test_gamma_red.clicked.connect(lambda: self.displayGammaTest('red'))
+        self.btn_test_gamma_green.clicked.connect(lambda: self.displayGammaTest('green'))
+        self.btn_test_gamma_blue.clicked.connect(lambda: self.displayGammaTest('blue'))
+
+        self.sb_gamma_red.valueChanged.connect(lambda: self.gammaChanged('red'))
+        self.sb_gamma_green.valueChanged.connect(lambda: self.gammaChanged('green'))
+        self.sb_gamma_blue.valueChanged.connect(lambda: self.gammaChanged('blue'))
+
+        self.gamma = {
+            'red':      2.2,
+            'green':    2.2,
+            'blue':     2.2
+        }
+        self.gamma_channel: ColorChannel = 'red'
+
+        self.gamma_mode.set_color(self.gamma_channel)
+        self.gamma_mode.set_gamma(self.gamma[self.gamma_channel])
+
+    def displayGammaTest(self, channel: ColorChannel):
+        self.gamma_channel = channel
+
+        self.gamma_mode.set_color(channel)
+        self.gamma_mode.set_gamma(self.gamma[channel])
+
+        self.renderer.SelectMode(self.gamma_mode_name)
+        self.renderer.PreviewMode(self.gamma_mode_name)
+
+    def gammaChanged(self, channel: ColorChannel):
+        if channel == 'red':
+            self.gamma[channel] = self.sb_gamma_red.value()
+    
+        elif channel == 'green':
+            self.gamma[channel] = self.sb_gamma_green.value()
+
+        elif channel == 'blue':
+            self.gamma[channel] = self.sb_gamma_blue.value()
+
+        if channel == self.gamma_channel:
+            self.gamma_mode.set_gamma(self.gamma[channel])
 
     def populate_combo_boxes(self):
         self.cb_matrix_baudrates.addItems([str(rate) for rate in self.baudrates])
