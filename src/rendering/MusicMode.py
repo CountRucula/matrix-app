@@ -3,6 +3,7 @@ import numpy as np
 import pyaudio
 import logging
 from abc import abstractmethod
+from scipy import signal
 
 audio_client = None
 
@@ -42,10 +43,9 @@ class MusicMode(RenderMode):
     def callback(data, frame_count, time_info, status_flags):
         global audio_client
 
-        data = np.frombuffer(data, dtype=np.int16)
+        data = np.array(np.frombuffer(data, dtype=np.int16), dtype=float, copy=True)
 
-        peak = audio_client.find_peak(data)
-        audio_client.draw_peak(peak, (255,255,255))
+        audio_client.process_audio(data)
 
         return (bytes(), pyaudio.paContinue)
 
@@ -62,7 +62,7 @@ class MusicMode(RenderMode):
         self.framebuffer[:, 1:] = self.framebuffer[:, :-1]
 
     @abstractmethod
-    def draw_peak(self, peak: float, color):
+    def process_audio(self, data: np.ndarray):
         pass
 
     def render(self):
@@ -74,6 +74,10 @@ class TimelineMode(MusicMode):
 
         self.sensitivity = 75
 
+    def process_audio(self, data: np.ndarray):
+        peak = self.find_peak(data)
+        self.draw_peak(peak, (255, 255, 255))
+
     def draw_peak(self, peak: float, color):
         self.shift_left()
 
@@ -82,9 +86,41 @@ class TimelineMode(MusicMode):
         self.framebuffer[y_start:, -1] = color
         self.framebuffer[:y_start, -1] = (0,0,0)
 
-class FrequencyBandsMode(RenderMode):
+class FrequencyBandsMode(MusicMode):
     def __init__(self, width, height):
         super().__init__(width, height)
+
+        self.start_freq = 60
+        self.stop_freq = 20000
+
+        self.bins = 6
+
+        self.sensitivity = 75
+
+    def process_audio(self, data):
+        N = len(data)
+        fs = self.rate
+
+        df = fs/N
+        X = np.abs(np.fft.fft(data)) / N
+
+        start = int(self.start_freq / df)
+        stop  = int(self.stop_freq  / df)
+
+        bin_len = (stop - start)/self.bins
+
+        for i, start in enumerate(np.arange(start, stop+1, bin_len)):
+            m = np.mean(X[int(start):int(start+bin_len)]**2)
+
+            self.draw_bin(i, m)
+
+    def draw_bin(self, index: int, value: float):
+        y_start =  self.height - int(value * self.height // self.sensitivity)
+        x_start = self.width//self.bins*index
+        x_end = self.width//self.bins*(index+1)
+
+        self.framebuffer[y_start:, x_start:x_end] = (255,255,255)
+        self.framebuffer[:y_start, x_start:x_end] = (0,0,0)
 
     def render(self):
         return self.framebuffer
