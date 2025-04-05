@@ -7,20 +7,16 @@ from queue import Queue, Empty
 from threading import Thread
 import time
 
-from matrix.MatrixFormat import HEADER, FOOTER, ESCAPE
+from com.Format import HEADER, FOOTER, ESCAPE
 
 class State(Enum):
     IDLE = 0
     DATA = 1
 
-class MatrixLink:
+class SerialLink:
     def __init__(self):
         self.serial = None
-        self.baudrate = 9600
-        self.stopbits = 1.0
-        self.parity = serial.PARITY_NONE
-        self.bits = 8
-        self.timeout = 0.01
+        self.timeout = 0.001
 
         self.connected = False
 
@@ -46,11 +42,6 @@ class MatrixLink:
         self.send_thread.join()
         self.recv_thread.join()
 
-    def SetBaudRate(self, baudrate: int):
-        self.baudrate = baudrate
-        self.serial.baudrate = self.baudrate
-
-
     def ListDevices(self) -> list[str]:
         ports = serial.tools.list_ports.comports()
         self.available_devices = [info.device for info in ports]
@@ -64,17 +55,7 @@ class MatrixLink:
             logging.error(f"could not connect to {dev}; not a com-port!")
             return
 
-        self.serial = serial.Serial(
-            dev,
-            baudrate=self.baudrate,
-            bytesize=self.bits,
-            parity=self.parity,
-            stopbits=self.stopbits,
-            timeout=self.timeout,
-        )
-        self.serial.flush()
-        self.serial.reset_input_buffer()
-        self.serial.reset_output_buffer()
+        self.serial = serial.Serial( dev, timeout=self.timeout,)
 
         self.connected = True
 
@@ -87,6 +68,7 @@ class MatrixLink:
             logging.info("already disconnected")
             return
 
+        self.Flush()
         self.Stop()
 
         self.serial.close()
@@ -118,8 +100,18 @@ class MatrixLink:
     def Available(self) -> bool:
         return not self.recv_queue.empty()
 
+    def OutputLength(self) -> int:
+        return self.send_queue.qsize()
+
     def SendFrame(self, frame: bytes):
         self.send_queue.put(frame)
+    
+    def ClearSendQueue(self):
+        self.send_queue = Queue()
+
+    def Flush(self):
+        while not self.send_queue.empty():
+            time.sleep(0.05)
 
     def GetFrame(self, timeout: float = 0.01):
         try:
@@ -143,8 +135,13 @@ class MatrixLink:
         while self.running:
             try:
                 frame = self.send_queue.get(timeout=0.01)
+
+                #start_time = time.time()
                 self.serial.write(frame)
+                #print(f'serial write took {(time.time() - start_time)*1000:.2f} ms')
+
+                #print(f'{self.OutputLength()} Frames Remaining')
             except Empty:
-                pass
+                time.sleep(0.01)
             except Exception:
                 self.running = False

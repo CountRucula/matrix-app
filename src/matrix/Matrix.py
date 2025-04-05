@@ -1,110 +1,57 @@
-from matrix.MatrixLink import MatrixLink
-from matrix.MatrixFormat import MatrixFormat, MatrixCommands
-import numpy as np
-import time
+from com.Link import SerialLink
+from com.Device import Device
+from com.Format import DeviceType
 
-class Matrix:
+from matrix.Format import MatrixFormat, MatrixCommands
+import numpy as np
+
+class Matrix(Device):
     def __init__(self):
         self.width = None
         self.heigth = None
 
         self.fw_version = ""
 
-        self.link = MatrixLink()
+        self.gamma_red = 1.0
+        self.gamma_green = 1.0
+        self.gamma_blue = 1.0
 
-    def ListMatrices(self) -> list[str]:
-        devices = self.link.ListDevices()
-        matrices = []
+        self.format = MatrixFormat()
+        self.link = SerialLink()
+    
+    def list_matrices(self) -> list[str]:
+        device = self.list_devices()
+        return [dev[0] for dev in device if dev[1] == DeviceType.Matrix]
 
-        for dev in devices:
-            valid = self.TestConnection(dev)
-
-            if valid:
-                matrices.append(dev)
-
-        return matrices
-
-    def TestConnection(self, dev: str) -> bool:
-        try:
-            self.link.Connect(dev)
-
-            version = self.GetFwVersion(0.05)
-
-            self.link.Disconnect()
-
-            return version is not None
-
-        except Exception:
-            return False
-
-
-    def Connect(self, dev: str):
-        self.link.baudrate = 115200
-        self.link.Connect(dev)
-
-    def Disconnect(self):
-        self.ClearFrame()
-        self.link.Disconnect()
-
-    def SendAndWait(self, raw: bytes, timeout: float | None = None) -> tuple[MatrixCommands, dict]:
-        start = time.time()
-
-        self.link.SendFrame(raw)
-
-        if timeout:
-            while ((time.time() - start) < timeout) and not self.link.Available():
-                time.sleep(0.01)
-
-        else:
-            while not self.link.Available():
-                time.sleep(0.01)
-
-        raw = self.link.GetFrame()
-
-        if raw is None:
-            return None, None
-
-        frame = MatrixFormat.ParseFrame(raw)
-        return MatrixFormat.GetResponseCmd(frame), MatrixFormat.GetResponseData(frame)
-
-    def GetSize(self) -> tuple[int, int]:
+    def get_size(self) -> tuple[int, int]:
         if self.link.connected:
-            raw = MatrixFormat.BuildCmd_GetSize()
-            cmd, data = self.SendAndWait(raw)
-
-            self.width = data.width
-            self.heigth = data.height
-
-            return self.width, self.heigth
-
-    def GetFwVersion(self, timeout: float | None = None) -> str:
-        if self.link.connected:
-            raw = MatrixFormat.BuildCmd_GetFwVersion()
-            cmd, data = self.SendAndWait(raw, timeout)
+            raw = self.format.build_cmd_get_size()
+            cmd, data = self.send_and_receive(raw)
 
             if cmd is None or data is None:
                 return None
 
-            self.fw_version = f'{data.major}.{data.minor}'
+            self.width, self.heigth = self.format.get_size(data)
 
-            return self.fw_version
+            return self.width, self.heigth
 
-    def ClearFrame(self) -> None:
+    def clear_frame(self) -> None:
         if self.link.connected:
-            raw = MatrixFormat.BuildCmd_ClrFrame()
+            raw = self.format.build_cmd_clr_frame()
             self.link.SendFrame(raw)
 
-    def SetBaudrate(self, baudrate: int) -> None:
-        if self.link.connected:
-            raw = MatrixFormat.BuildCmd_SetBaudrate(baudrate)
-            self.link.SendFrame(raw)
+    def apply_gamma_correction(self, data: np.ndarray):
+        data = data.astype(dtype=float)
 
-            time.sleep(0.05)
+        data[..., 0] = np.array((data[..., 0]/255.0)**self.gamma_red   * 255)
+        data[..., 1] = np.array((data[..., 1]/255.0)**self.gamma_green * 255)
+        data[..., 2] = np.array((data[..., 2]/255.0)**self.gamma_blue  * 255)
 
-            self.link.SetBaudRate(baudrate)
+        return data.astype(dtype=np.uint8)
 
     def display(self, data: np.ndarray):
         if self.link.connected:
             data = data.reshape(-1, data.shape[-1])  # flatten data (rows, cols, 3) => (rows*cols, 3)
-            raw = MatrixFormat.BuildData(data)
+            data = self.apply_gamma_correction(data)
+            raw = self.format.build_cmd_set_frame(data)
             self.link.SendFrame(raw)
