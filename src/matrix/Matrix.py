@@ -19,9 +19,16 @@ class Matrix(Device):
         self.format = MatrixFormat()
         self.link = SerialLink()
     
-    def list_matrices(self) -> list[str]:
-        device = self.list_devices()
-        return [dev[0] for dev in device if dev[1] == DeviceType.Matrix]
+    def list_matrices(self, devices: list[tuple[str, DeviceType]] = None) -> list[str]:
+        if devices is None:
+            devices = self.list_devices()
+
+        return [dev[0] for dev in devices if dev[1] == DeviceType.Matrix]
+
+    def disconnect(self):
+        self.link.ClearSendQueue()
+        self.clear_frame()
+        return super().disconnect()
 
     def get_size(self) -> tuple[int, int]:
         if self.link.connected:

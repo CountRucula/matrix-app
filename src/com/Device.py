@@ -25,23 +25,28 @@ class Device:
         try:
             self.link.Connect(dev)
 
-            devtype = self.get_device_type(0.05)
+            devtype = self.get_device_type(0.2)
             
             self.link.Disconnect()
 
             return devtype
 
         except Exception:
-            return False
+            return None
 
+    def port(self):
+        if self.link.connected:
+            return self.link.serial.port
+        
+        return None
 
+    def connected(self):
+        return self.link.connected
+    
     def connect(self, dev: str):
-        self.link.baudrate = 115200
         self.link.Connect(dev)
 
     def disconnect(self):
-        self.link.ClearSendQueue()
-        self.clear_frame()
         self.link.Disconnect()
 
     def send_and_receive(self, raw: bytes, timeout: float | None = None) -> tuple[GenericCommands, dict]:
