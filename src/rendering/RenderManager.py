@@ -20,6 +20,7 @@ class RenderManager:
         self.preview_mode: RenderMode | None = None
 
         self.hardware_matrix: Matrix = None
+        self.hardware_matrix_enabled = False
         self.virtual_matrix: LEDMatrixWidget = None
 
         self.on_mode_changed = on_mode_changed
@@ -48,6 +49,16 @@ class RenderManager:
 
             if self.active_mode != self.preview_mode:
                 self.active_mode.reset()
+    
+    def EnableMatrixOutput(self):
+        self.hardware_matrix_enabled = True
+
+    def DisableMarixOutput(self):
+        self.hardware_matrix_enabled = False
+
+    def ClearMode(self):
+        self.active_mode = None
+        self.on_mode_changed('-')
 
     def PreviewMode(self, name: str) -> None:
         if name in self.modes:
@@ -80,7 +91,7 @@ class RenderManager:
                 if self.active_mode:
                     buffer = self.active_mode.render()
 
-                    if self.hardware_matrix:
+                    if self.hardware_matrix and self.hardware_matrix_enabled:
                         self.hardware_matrix.display(buffer)
                     
                 if self.preview_mode:
