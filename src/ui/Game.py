@@ -8,14 +8,19 @@ from typing import Literal
 
 # genrated ui
 from qt.generated.UI_game import Ui_TabGame
+from ui.Input import InputDevice, Event
 
 from rendering.RenderManager import RenderManager
 from rendering.GameMode import SnakeMode, Direction, PongMode
 
 class TabGame(QWidget, Ui_TabGame):
-    def __init__(self, renderer: RenderManager, width: int, height: int):
+    def __init__(self, input_dev, renderer: RenderManager, width: int, height: int):
         super().__init__()
         self.setupUi(self)
+
+        self.input: InputDevice = input_dev
+        self.input.joystick_changed.connect(self.handle_joystick)
+        self.input.btn_pressed.connect(self.handle_button)
 
         # load game icons
         self.load_icons()
@@ -28,6 +33,7 @@ class TabGame(QWidget, Ui_TabGame):
         self.renderer = renderer
         self.renderer.AddMode('Snake', self.snake_mode)
         self.renderer.AddMode('Pong', self.pong_mode)
+        self.select_game('Snake')
 
         # register callbacks
         self.btn_snake.clicked.connect(lambda: self.select_game('Snake'))
@@ -65,6 +71,24 @@ class TabGame(QWidget, Ui_TabGame):
 
     def preview_game(self):
         self.renderer.PreviewMode(self.selected_game)
+
+    def handle_joystick(self, event: Event):
+        match event:
+            case Event.JoystickToLeft:
+                self.snake_mode.change_direction(Direction.LEFT)
+
+            case Event.JoystickToRight:
+                self.snake_mode.change_direction(Direction.RIGHT)
+
+            case Event.JoystickToTop:
+                self.snake_mode.change_direction(Direction.UP)
+
+            case Event.JoystickToBottom:
+                self.snake_mode.change_direction(Direction.DOWN)
+
+    def handle_button(self):
+        if self.selected_game == 'Snake':
+            self.snake_mode.start_pause()
 
     def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key_Up:

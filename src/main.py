@@ -8,6 +8,7 @@ from ui.MainWindow import MainWindow
 
 # import matrix
 from matrix.Matrix import Matrix
+from controller.Controller import Controller
 
 def main():
   # You need one (and only one) QApplication instance per application.
@@ -22,9 +23,10 @@ def main():
 
   # create Matrix
   matrix = Matrix()
+  controller = Controller()
 
   # Create a Qt widget, which will be our window.
-  window = MainWindow(matrix)
+  window = MainWindow(matrix, controller)
 
   # Start the event loop.
   app.exec()

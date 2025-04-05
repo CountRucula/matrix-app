@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 from matrix.Matrix import Matrix
+from ui.Input import InputDevice
 from rendering.RenderManager import RenderManager
 from rendering.TestMode import TestGammaMode, ColorChannel
 
@@ -14,16 +15,19 @@ from rendering.TestMode import TestGammaMode, ColorChannel
 from qt.generated.UI_settings import Ui_TabSettings
 
 class TabSettings(QWidget, Ui_TabSettings):
-    def __init__(self, parent, matrix, renderer: RenderManager, width, height):
+    matrix_connected = False
+    controller_connected = False
+
+    def __init__(self, parent, matrix, input_dev, renderer: RenderManager, width, height):
         super().__init__()
         self.setupUi(self)
         self.parent = parent
 
         self.matrix: Matrix = matrix
+        self.input: InputDevice  = input_dev
         self.renderer = renderer
 
         # title
-        self.lbl_frackstock_conn.setProperty('class', 'title')
         self.lbl_matrix_conn.setProperty('class', 'title')
         self.lbl_gamma_corr.setProperty('class', 'title')
 
@@ -31,20 +35,19 @@ class TabSettings(QWidget, Ui_TabSettings):
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'
         icon = QIcon(str(icon_path))
 
-        # matrix connection
+        # serial connection
         self.load_ports()
         self.btn_refresh_ports.setIcon(icon)
         self.btn_refresh_ports.setIconSize(QSize(30,30))
         self.btn_refresh_ports.clicked.connect(self.load_ports)
         self.btn_refresh_ports.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
-        self.btn_matrix_connect.clicked.connect(self.connect_callback)
-        self.connected = False
+        self.btn_matrix_connect.clicked.connect(self.handle_matrix_connect)
+        self.btn_controller_connect.clicked.connect(self.handle_controller_connect)
 
-        self.baudrates = [9600, 19200, 38400, 115200, 256000, 1000000]
-        self.baudrate: int = 115200
-        self.populate_combo_boxes()
-        self.cb_matrix_baudrates.currentTextChanged.connect(self.baudrate_changed)
+        # try to connect
+        self.btn_matrix_connect.clicked.emit()
+        self.btn_controller_connect.clicked.emit()
 
         # gamma correction
         self.gamma_mode = TestGammaMode(width, height)
@@ -66,6 +69,10 @@ class TabSettings(QWidget, Ui_TabSettings):
         }
         self.gamma_channel: ColorChannel = 'red'
 
+        self.matrix.gamma_red = self.gamma['red']
+        self.matrix.gamma_green = self.gamma['green']
+        self.matrix.gamma_blue = self.gamma['blue']
+
         self.gamma_mode.set_color(self.gamma_channel)
         self.gamma_mode.set_gamma(self.gamma[self.gamma_channel])
 
@@ -81,40 +88,69 @@ class TabSettings(QWidget, Ui_TabSettings):
     def gammaChanged(self, channel: ColorChannel):
         if channel == 'red':
             self.gamma[channel] = self.sb_gamma_red.value()
+            self.matrix.gamma_red = self.gamma[channel]
     
         elif channel == 'green':
             self.gamma[channel] = self.sb_gamma_green.value()
+            self.matrix.gamma_green = self.gamma[channel]
 
         elif channel == 'blue':
             self.gamma[channel] = self.sb_gamma_blue.value()
+            self.matrix.gamma_blue = self.gamma[channel]
 
         if channel == self.gamma_channel:
             self.gamma_mode.set_gamma(self.gamma[channel])
 
-    def populate_combo_boxes(self):
-        self.cb_matrix_baudrates.addItems([str(rate) for rate in self.baudrates])
-        self.cb_matrix_baudrates.setCurrentIndex(self.baudrates.index(self.baudrate))
-
-    def baudrate_changed(self):
-        self.baudrate = int(self.cb_matrix_baudrates.currentText(), 10)
-        self.matrix.SetBaudrate(self.baudrate)
-
     def load_ports(self):
-        devices = self.matrix.ListMatrices()
+        devices = self.matrix.list_devices()
+        print(devices)
+        matrices = self.matrix.list_matrices(devices)
+        controllers = self.input.controller.list_controllers(devices)
+
+        if self.matrix_connected:
+            matrices.append(self.matrix.port())
+
+        if self.controller_connected:
+            controllers.append(self.input.controller.port())
 
         self.cb_matrix_ports.clear()
-        self.cb_matrix_ports.addItems(devices)
+        self.cb_matrix_ports.addItems(matrices)
 
-    def connect_callback(self):
-        if self.connected:
-            self.matrix.Disconnect()
-            self.connected = False
+        self.cb_controller_ports.clear()
+        self.cb_controller_ports.addItems(controllers)
+
+    def handle_matrix_connect(self):
+        if self.matrix_connected:
+            self.renderer.DisableMarixOutput()
+            self.matrix.disconnect()
+            self.matrix_connected = False
             self.btn_matrix_connect.setText("Connect")
             self.parent.lbl_matrix_status.setText("Disconnected")
+
         else:
             dev = self.cb_matrix_ports.currentText()
-            self.matrix.Connect(dev)
-            self.baudrate_changed()
-            self.connected = True
+            if dev == "":
+                return
+
+            self.matrix.connect(dev)
+            self.renderer.EnableMatrixOutput()
+            self.matrix_connected = True
             self.btn_matrix_connect.setText("Disconnect")
             self.parent.lbl_matrix_status.setText("Connected")
+
+    def handle_controller_connect(self):
+        if self.controller_connected:
+            self.input.stop()
+            self.controller_connected = False
+            self.btn_controller_connect.setText("Connect")
+            self.parent.lbl_controller_status.setText("Disconnected")
+
+        else:
+            dev = self.cb_controller_ports.currentText()
+            if dev == "":
+                return
+
+            self.input.start(dev)
+            self.controller_connected = True
+            self.btn_controller_connect.setText("Disconnect")
+            self.parent.lbl_controller_status.setText("Connected")

@@ -17,21 +17,12 @@ from ui.Animation import TabAnimation
 from ui.Text import TabText
 from ui.Preview import TabPreview
 from ui.Game import TabGame
+from ui.Input import InputDevice
 
 from rendering.RenderManager import RenderManager
-from rendering.AnimationMode import SineWaveMode, SawtoothMode, RectangularMode, RaindropsMode, RainbowMode
-from rendering.MusicMode import TimelineMode, FrequencyBandsMode
-
-class KeyFilter(QObject):
-    def eventFilter(self, obj, event):
-        if event.type() == event.KeyPress:
-            if event.key() in (Qt.Key_Up, Qt.Key_Down, Qt.Key_Left, Qt.Key_Right, Qt.Key_Return):
-                print(f"Key pressed: {event.text() or event.key()}")
-                return True  # Mark as handled, block propagation
-        return super().eventFilter(obj, event)
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self, matrix):
+    def __init__(self, matrix, controller):
         super().__init__()
         self.setupUi(self)
 
@@ -45,8 +36,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-        # matrix connection
+        # serial connections
         self.matrix = matrix
+        self.controller = controller
+        self.input_dev = InputDevice(self.controller)
 
         # register render modes
         self.renderer = RenderManager(
@@ -76,9 +69,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.title_layout.insertWidget(0, self.tab_bar)
 
         # add tab content 
-        self.tab_settings   = TabSettings(self, self.matrix, self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_settings   = TabSettings(self, self.matrix, self.input_dev, self.renderer, self.matrix_width, self.matrix_height)
         self.tab_animation  = TabAnimation(self.renderer, self.matrix_width, self.matrix_height)
-        self.tab_game       = TabGame(self.renderer, self.matrix_width, self.matrix_height)
+        self.tab_game       = TabGame(self.input_dev, self.renderer, self.matrix_width, self.matrix_height)
         self.tab_music      = TabMusic(self.renderer, self.matrix_width, self.matrix_height)
         self.tab_text       = TabText()
         self.tab_image      = TabImage(self.renderer, self.matrix_width, self.matrix_height)
@@ -134,3 +127,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def keyReleaseEvent(self, event):
         self.tab_game.keyReleaseEvent(event)
         return super().keyReleaseEvent(event)
+
+    def closeEvent(self, event):
+        self.renderer.DisableMarixOutput()
+        self.matrix.disconnect()
+        event.accept() # let the window close

@@ -1,56 +1,86 @@
 from PySide6.QtCore import QObject, Signal, QTimer
+from threading import Thread
+import time
 
-from controller.Controller import Controller, ButtonEvent, ButtonState, JoystickEvent, JoystickState 
+from controller.Controller import Controller, ButtonState, JoystickState, Event
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class InputDevice(QObject):
     btn_pressed = Signal()
     btn_released = Signal()
 
-    joystick_changed = Signal(JoystickState)
+    joystick_changed = Signal(Event)
 
     poti_moved = Signal(int, float)
 
     btn_state: ButtonState
-    btn_event: ButtonEvent
     stick_state: JoystickState
-    stick_event: JoystickEvent
-    poti_0: float
-    poti_1: float
+    poti_0: float = 0
+    poti_1: float = 0
 
     def __init__(self, controller: Controller, parent = None):
         super().__init__(parent)
         
-        self.controller = Controller
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.poll)
-        self.timer.start(16)
+        self.controller = controller
+        self.running = False
+    
+    def __del__(self):
+        if self.running:
+            self.stop()
+
+    def start(self, dev: str):
+        self.controller.connect(dev)
+        self.poll_thread = Thread(target=self.loop, daemon=True)
+        self.running = True
+        self.poll_thread.start()
+
+    def stop(self):
+        self.running = False
+        self.poll_thread.join()
+        self.controller.disconnect()
 
     def poll(self):
-        # read
+        if not self.controller.connected():
+            return
+
+        # read states
         self.btn_state = self.controller.get_btn_state()
-        self.btn_event = self.controller.get_btn_event()
-
         self.stick_state = self.controller.get_joystick_state()
-        self.stick_event = self.controller.get_joystick_event()
-
         new_poti_0 = self.controller.get_poti_pos(0)
         new_poti_1 = self.controller.get_poti_pos(1)
 
-        # check if hardware states have changed
+        # handle events
+        events = self.controller.get_events()
+
+        for e in events:
+            match e:
+                case Event.BtnPressed:
+                    logging.info("btn pressed")
+                    self.btn_pressed.emit()
+
+                case Event.BtnReleased:
+                    logging.info("btn released")
+                    self.btn_released.emit()
+
+                case Event.JoystickToMiddle | Event.JoystickToLeft | Event.JoystickToRight | Event.JoystickToTop | Event.JoystickToBottom:
+                    logging.info(f"joystick moved: {e}")
+                    self.joystick_changed.emit(e)
+
+        # check if potis have moved
         if abs(new_poti_0-self.poti_0) > 0.5:
+            logging.info(f"poti 0 moved: {new_poti_0:.1f}")
             self.poti_moved.emit(0, new_poti_0)
 
         if abs(new_poti_1-self.poti_1) > 0.5:
+            logging.info(f"poti 1 moved: {new_poti_1:.1f}")
             self.poti_moved.emit(1, new_poti_1)
 
         self.poti_0 = new_poti_0
         self.poti_1 = new_poti_1
 
-        if self.btn_event == ButtonEvent.Press:
-            self.btn_pressed.emit()
-
-        if self.btn_event == ButtonEvent.Release:
-            self.btn_released.emit()
-
-        if self.stick_event != JoystickEvent.No:
-            self.joystick_changed.emit(self.stick_state)
+    def loop(self):
+        while self.running:
+            self.poll()
+            time.sleep(0.016)
