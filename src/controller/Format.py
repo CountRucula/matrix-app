@@ -7,22 +7,16 @@ from com.Format import SerialFormat, EnumAdapter
 
 class ControllerCommands(enum.Enum):
     GetPotiPos          = 0x10
-    CalibratePoti       = 0x11
+    GetPotiRaw          = 0x11
+    GetBtnState         = 0x12
+    GetJoystickState    = 0x13
 
-    GetBtnState         = 0x20
-    GetBtnEvent         = 0x21
-
-    GetJoystickState    = 0x30
-    GetJoystickEvent    = 0x31
+    GetEvents           = 0x20
+    CalibratePoti       = 0x21
 
 class ButtonState(enum.Enum):
-    Pressed  = 0x00
+    Pressed  = 0x01
     Released = 0x02
-
-class ButtonEvent(enum.Enum):
-    No      = 0x00
-    Press   = 0x01
-    Release = 0x02
 
 class JoystickState(enum.Enum):
     Middle  = 0x01
@@ -31,13 +25,15 @@ class JoystickState(enum.Enum):
     Top     = 0x04
     Bottom  = 0x05
 
-class JoystickEvent(enum.Enum):
-    No          = 0x00
-    ToMiddle    = 0x01
-    ToLeft      = 0x02
-    ToRight     = 0x03
-    ToTop       = 0x04
-    ToBottom    = 0x05
+class Event(enum.Enum):
+    No                  = 0x00
+    BtnPressed          = 0x01
+    BtnReleased         = 0x02
+    JoystickToMiddle    = 0x03
+    JoystickToLeft      = 0x04
+    JoystickToRight     = 0x05
+    JoystickToTop       = 0x06
+    JoystickToBottom    = 0x07
 
 POTI_NRS = Literal[0, 1]
 
@@ -53,14 +49,17 @@ class ControllerFormat(SerialFormat):
             self.commands.GetPotiPos: Struct(
                 "poti_nr" / Byte
             ),
+            self.commands.GetPotiRaw: Struct(
+                "poti_nr" / Byte
+            ),
             self.commands.CalibratePoti: Struct(
                 "poti_nr" / Byte,
-                "cal_type" / Byte
+                "min" / Byte,
+                "max" / Byte
             ),
             self.commands.GetBtnState: Struct(),
-            self.commands.GetBtnEvent: Struct(),
             self.commands.GetJoystickState: Struct(),
-            self.commands.GetJoystickEvent: Struct(),
+            self.commands.GetEvents: Struct(),
         })
 
         self.response_table.update({
@@ -68,38 +67,36 @@ class ControllerFormat(SerialFormat):
                 "poti_nr" / Byte,
                 "poti_pos" / Float32b
             ),
+            self.commands.GetPotiRaw: Struct(
+                "poti_nr" / Byte,
+                "poti_raw" / Int16ul
+            ),
             self.commands.CalibratePoti: Struct(),
             self.commands.GetBtnState: Struct(
                 "state" / EnumAdapter(Enum(Byte, ButtonState), ButtonState)
             ),
-            self.commands.GetBtnEvent: Struct(
-                "event" / EnumAdapter(Enum(Byte, ButtonEvent), ButtonEvent)
-            ),
             self.commands.GetJoystickState: Struct(
                 "state" / EnumAdapter(Enum(Byte, JoystickState), JoystickState)
             ),
-            self.commands.GetJoystickEvent: Struct(
-                "event" / EnumAdapter(Enum(Byte, JoystickEvent), JoystickEvent)
+            self.commands.GetEvents: Struct(
+                "events" / PrefixedArray(Int16ul, EnumAdapter(Enum(Byte, Event), Event))
             ),
         })
 
     def build_cmd_get_poti_pos(self, poti_nr: POTI_NRS) -> bytes:
         return self.command_builder.build( self.commands.GetPotiPos, dict(poti_nr = poti_nr))
 
-    def build_cmd_calibrate_poti_max(self, poti_nr: POTI_NRS) -> bytes:
-        return self.command_builder.build( self.commands.CalibratePoti, dict(poti_nr = poti_nr, cal_type=0))
+    def build_cmd_get_poti_raw(self, poti_nr: POTI_NRS) -> bytes:
+        return self.command_builder.build( self.commands.GetPotiRaw, dict(poti_nr = poti_nr))
 
-    def build_cmd_calibrate_poti_min(self, poti_nr: POTI_NRS) -> bytes:
-        return self.command_builder.build( self.commands.CalibratePoti, dict(poti_nr = poti_nr, cal_type=1))
-    
+    def build_cmd_calibrate_poti(self, poti_nr: POTI_NRS, raw_max: int = 4095, raw_min: int = 0) -> bytes:
+        return self.command_builder.build( self.commands.CalibratePoti, dict(poti_nr = poti_nr, max=raw_max, min=raw_min))
+
     def build_cmd_get_btn_state(self) -> bytes:
         return self.command_builder.build(self.commands.GetBtnState)
 
-    def build_cmd_get_btn_event(self) -> bytes:
-        return self.command_builder.build(self.commands.GetBtnEvent)
-
-    def build_cmd_get_joystick_event(self) -> bytes:
-        return self.command_builder.build(self.commands.GetJoystickEvent)
+    def build_cmd_get_events(self) -> bytes:
+        return self.command_builder.build(self.commands.GetEvents)
 
     def build_cmd_get_joystick_state(self) -> bytes:
         return self.command_builder.build(self.commands.GetJoystickState)
@@ -107,14 +104,14 @@ class ControllerFormat(SerialFormat):
     def get_poti_pos(self, data: dict) -> tuple[int, float]:
         return data.poti_nr, data.poti_pos
 
+    def get_poti_raw(self, data: dict) -> tuple[int, int]:
+        return data.poti_nr, data.poti_raw
+
     def get_btn_state(self, data: dict) -> ButtonState:
         return data.state
-
-    def get_btn_event(self, data: dict) -> ButtonEvent:
-        return data.event
 
     def get_joystick_state(self, data: dict) -> JoystickState:
         return data.state
 
-    def get_joystick_event(self, data: dict) -> JoystickEvent:
-        return data.event 
+    def get_events(self, data: dict) -> list[Event]:
+        return data.events
