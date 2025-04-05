@@ -98,4 +98,4 @@ class RenderMode(ABC):
         self.clear()
 
     def clear(self):
-        self.framebuffer = np.zeros((self.height, self.width, 3), np.uint8)
+        self.framebuffer = np.zeros((self.height, self.width, 3))
