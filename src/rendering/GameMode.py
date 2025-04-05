@@ -5,6 +5,8 @@ from collections import deque
 import time
 import random
 from typing import Literal
+from PIL import ImageFont, Image, ImageDraw
+from fonts import font_5x7
 
 class Direction(enum.Enum):
     UP      = 0
@@ -300,9 +302,14 @@ class PongMode(RenderMode):
         self.player_speed = 15.0
         self.player_color = np.array((255,255,255))
 
+        self.middle_line_width = 2
+        self.middle_line_color = np.array((255, 0, 0))
+
+        self.score_color = np.array((0, 255, 0))
+
         self.start_time = time.time()
 
-        self.winning_score = 10
+        self.winning_score = 9
 
         self.reset()
 
@@ -453,7 +460,6 @@ class PongMode(RenderMode):
 
         self.round_running = True
         self.round += 1
-        print(f"round {self.round}, player-1: {self.player1_score}, player-2: {self.player2_score}")
 
     def round_over(self, winner: Literal['left', 'right']):
         self.round_running = False
@@ -522,6 +528,27 @@ class PongMode(RenderMode):
         self.framebuffer[ipos_start+1:ipos_end, x] = self.player_color
         self.framebuffer[ipos_end,              x] = self.player_color * (pos - ipos_start)
 
+    def draw_middle_line(self):
+        size = self.middle_line_width
+
+        coords = np.array([(y, x + self.width//2 - size/2) for y in range(self.height) for x in range(size) if ((y-1) % (2*size)) < size], dtype=int)
+
+        self.framebuffer[coords[:,0], coords[:,1]] = self.middle_line_color
+
+    def draw_score(self, score: int, position: Literal['left', 'right']):
+        score_str = str(score)
+        bitmap = font_5x7.Characters[score_str[0]]
+
+        char_width = len(bitmap[0])
+        char_height = len(bitmap)
+
+        if position == 'left':
+            x_start = self.width//2 - self.middle_line_width//2 - 2 - char_width
+        else:
+            x_start = self.width//2 + self.middle_line_width//2 + 2
+
+        self.framebuffer[1:1+char_height, x_start:x_start+char_width] = np.einsum('ik,j->ikj', bitmap, self.score_color)
+
     def render(self):
         elapsed = time.time() - self.start_time
         self.start_time = time.time()
@@ -547,6 +574,10 @@ class PongMode(RenderMode):
                 self.round_countdown -= elapsed
             
         # draw objects
+        self.draw_middle_line()
+        self.draw_score(self.player1_score, 'left')
+        self.draw_score(self.player2_score, 'right')
+    
         if self.ball is not None:    
             self.draw_ball()
 
