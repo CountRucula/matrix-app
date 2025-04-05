@@ -77,6 +77,21 @@ class Ui_MainWindow(object):
 
         self.footer_layout.addWidget(self.lbl_matrix_status)
 
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy)
+        self.label_5.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.footer_layout.addWidget(self.label_5)
+
+        self.lbl_controller_status = QLabel(self.centralwidget)
+        self.lbl_controller_status.setObjectName(u"lbl_controller_status")
+        sizePolicy.setHeightForWidth(self.lbl_controller_status.sizePolicy().hasHeightForWidth())
+        self.lbl_controller_status.setSizePolicy(sizePolicy)
+
+        self.footer_layout.addWidget(self.lbl_controller_status)
+
         self.line_2 = QFrame(self.centralwidget)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setFrameShape(QFrame.Shape.VLine)
@@ -152,6 +167,8 @@ class Ui_MainWindow(object):
         self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_1.setText(QCoreApplication.translate("MainWindow", u"Matrix Status:", None))
         self.lbl_matrix_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
+        self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
         self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))

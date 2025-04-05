@@ -30,7 +30,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Matrix Connection</string>
+      <string>Hardware Connection</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -38,23 +38,8 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="lbl_matrix_port">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Port:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="1">
       <widget class="QComboBox" name="cb_matrix_ports">
        <property name="font">
         <font>
@@ -66,44 +51,22 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QToolButton" name="btn_refresh_ports">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_matrix_baud">
+     <item row="0" column="0">
+      <widget class="QLabel" name="lbl_matrix_port">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Baud:</string>
+        <string>Matrix</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QComboBox" name="cb_matrix_baudrates">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="frame">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="0" column="3">
       <widget class="QPushButton" name="btn_matrix_connect">
        <property name="font">
         <font>
@@ -115,28 +78,61 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="lbl_controller_port">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Controller</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="cb_controller_ports">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="btn_controller_connect">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2" rowspan="2">
+      <widget class="QToolButton" name="btn_refresh_ports">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::SystemReboot"/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="lbl_frackstock_conn">
-     <property name="font">
-      <font>
-       <pointsize>9</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Frackstock Connection</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
