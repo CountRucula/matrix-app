@@ -20,6 +20,9 @@ class InputDevice(QObject):
     poti_0: float = 0
     poti_1: float = 0
 
+    poti_0_raw: int = 0
+    poti_1_raw: int = 0
+
     def __init__(self, controller: Controller, parent = None):
         super().__init__(parent)
         
@@ -48,6 +51,8 @@ class InputDevice(QObject):
         # read states
         self.btn_state = self.controller.get_btn_state()
         self.stick_state = self.controller.get_joystick_state()
+        self.poti_0_raw = self.controller.get_poti_raw(0)
+        self.poti_1_raw = self.controller.get_poti_raw(1)
         new_poti_0 = self.controller.get_poti_pos(0)
         new_poti_1 = self.controller.get_poti_pos(1)
 
@@ -83,4 +88,4 @@ class InputDevice(QObject):
     def loop(self):
         while self.running:
             self.poll()
-            time.sleep(0.016)
+            time.sleep(0.020)
