@@ -5,6 +5,7 @@ from PySide6.QtCore import QSize, Qt
 
 from pathlib import Path
 from typing import Literal
+import json
 
 from matrix.Matrix import Matrix
 from ui.Input import InputDevice
@@ -36,6 +37,9 @@ class TabSettings(QWidget, Ui_TabSettings):
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'
         icon = QIcon(str(icon_path))
 
+        # load settings
+        self.load_settings()
+
         # serial connection
         self.load_ports()
         self.btn_refresh_ports.setIcon(icon)
@@ -65,15 +69,14 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.btn_test_gamma_green.clicked.connect(lambda: self.displayGammaTest('green'))
         self.btn_test_gamma_blue.clicked.connect(lambda: self.displayGammaTest('blue'))
 
+        self.sb_gamma_red.setValue(self.gamma['red'])
+        self.sb_gamma_green.setValue(self.gamma['green'])
+        self.sb_gamma_blue.setValue(self.gamma['blue'])
+
         self.sb_gamma_red.valueChanged.connect(lambda: self.gammaChanged('red'))
         self.sb_gamma_green.valueChanged.connect(lambda: self.gammaChanged('green'))
         self.sb_gamma_blue.valueChanged.connect(lambda: self.gammaChanged('blue'))
 
-        self.gamma = {
-            'red':      2.2,
-            'green':    2.2,
-            'blue':     2.2
-        }
         self.gamma_channel: ColorChannel = 'red'
 
         self.matrix.gamma_red = self.gamma['red']
@@ -91,6 +94,8 @@ class TabSettings(QWidget, Ui_TabSettings):
 
         self.poti_calib[poti][what] = raw
         self.input.controller.calibrate_poti(poti, self.poti_calib[poti]['max'], self.poti_calib[poti]['min'])
+
+        self.save_settings()
 
     def displayGammaTest(self, channel: ColorChannel):
         self.gamma_channel = channel
@@ -116,6 +121,8 @@ class TabSettings(QWidget, Ui_TabSettings):
 
         if channel == self.gamma_channel:
             self.gamma_mode.set_gamma(self.gamma[channel])
+
+        self.save_settings()
 
     def load_ports(self):
         devices = self.matrix.list_devices()
@@ -170,3 +177,49 @@ class TabSettings(QWidget, Ui_TabSettings):
             self.controller_connected = True
             self.btn_controller_connect.setText("Disconnect")
             self.parent.lbl_controller_status.setText("Connected")
+
+    def load_default_settings(self):
+        self.poti_calib = [
+            {
+                "min": 0,
+                "max": 4095,
+            },
+            {
+                "min": 0,
+                "max": 4095,
+            }
+        ]
+
+        self.gamma = {
+            'red':      2.2,
+            'green':    2.2,
+            'blue':     2.2
+        }
+
+        self.save_settings()
+
+    def load_settings(self):
+        path = Path(__file__).parent / '../../settings.json'
+        
+        if path.exists():
+            with open(path) as json_file:
+                json_data = json.load(json_file)
+                print(json_data)
+
+                self.gamma = json_data['gamma']
+                self.poti_calib = json_data['poti_calib']
+
+        else:
+            self.load_default_settings()
+        
+
+    def save_settings(self):
+        path = Path(__file__).parent / '../../settings.json'
+
+        with open(path, 'w+t') as json_file:
+            json_data = {
+                'gamma': self.gamma,
+                'poti_calib': self.poti_calib
+            }
+
+            json.dump(json_data, json_file, indent=4)
