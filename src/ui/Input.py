@@ -8,10 +8,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 class InputDevice(QObject):
-    btn_pressed = Signal()
-    btn_released = Signal()
+    btn_pressed = Signal(int)
+    btn_released = Signal(int)
 
-    joystick_changed = Signal(Event)
+    joystick_changed = Signal(int, JoystickState)
 
     poti_moved = Signal(int, float)
 
@@ -60,18 +60,22 @@ class InputDevice(QObject):
         events = self.controller.get_events()
 
         for e in events:
-            match e:
+            match e.id:
                 case Event.BtnPressed:
-                    logging.info("btn pressed")
-                    self.btn_pressed.emit()
+                    btn = e.btn_id
+                    logging.info(f"btn {btn} pressed")
+                    self.btn_pressed.emit(btn)
 
                 case Event.BtnReleased:
-                    logging.info("btn released")
-                    self.btn_released.emit()
+                    btn = e.btn_id
+                    logging.info(f"btn {btn} released")
+                    self.btn_released.emit(btn)
 
-                case Event.JoystickToMiddle | Event.JoystickToLeft | Event.JoystickToRight | Event.JoystickToTop | Event.JoystickToBottom:
-                    logging.info(f"joystick moved: {e}")
-                    self.joystick_changed.emit(e)
+                case Event.JoystickChanged:
+                    stick = e.stick_id
+                    state = e.state
+                    logging.info(f"joystick {stick} moved: {state}")
+                    self.joystick_changed.emit(stick, state)
 
         # check if potis have moved
         if abs(new_poti_0-self.poti_0) > 0.5:

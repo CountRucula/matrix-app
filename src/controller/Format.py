@@ -1,4 +1,4 @@
-from construct import Struct, Byte, Array, PrefixedArray, Int16ul, Float32b, Enum
+from construct import Struct, Byte, Array, PrefixedArray, Int16ul, Float32l, Enum, Switch
 import numpy as np
 import enum
 from typing import Literal
@@ -29,11 +29,8 @@ class Event(enum.Enum):
     No                  = 0x00
     BtnPressed          = 0x01
     BtnReleased         = 0x02
-    JoystickToMiddle    = 0x03
-    JoystickToLeft      = 0x04
-    JoystickToRight     = 0x05
-    JoystickToTop       = 0x06
-    JoystickToBottom    = 0x07
+    JoystickChanged     = 0x03
+    
 
 POTI_NRS = Literal[0, 1]
 
@@ -65,7 +62,7 @@ class ControllerFormat(SerialFormat):
         self.response_table.update({
             self.commands.GetPotiPos: Struct(
                 "poti_nr" / Byte,
-                "poti_pos" / Float32b
+                "poti_pos" / Float32l
             ),
             self.commands.GetPotiRaw: Struct(
                 "poti_nr" / Byte,
@@ -79,7 +76,21 @@ class ControllerFormat(SerialFormat):
                 "state" / EnumAdapter(Enum(Byte, JoystickState), JoystickState)
             ),
             self.commands.GetEvents: Struct(
-                "events" / PrefixedArray(Int16ul, EnumAdapter(Enum(Byte, Event), Event))
+                "events" / PrefixedArray(Int16ul, Struct(
+                    "id" / EnumAdapter(Enum(Byte, Event), Event),
+                    "data" / Switch(lambda this: this.id, {
+                        Event.BtnPressed : Struct(
+                            "btn_id" / Byte
+                        ),
+                        Event.BtnReleased: Struct(
+                            "btn_id" / Byte
+                        ),
+                        Event.JoystickChanged : Struct(
+                            "stick_id" / Byte,
+                            "state" / EnumAdapter(Enum(Byte, JoystickState), JoystickState) 
+                        ) 
+                    })
+                ))
             ),
         })
 
@@ -114,4 +125,14 @@ class ControllerFormat(SerialFormat):
         return data.state
 
     def get_events(self, data: dict) -> list[Event]:
-        return data.events
+        def merge(d: dict, event_id: Event):
+            d.update(dict(id=event_id))
+            return d
+
+        return [merge(e.data, e.id) for e in data.events]
+
+    def get_btn_event_data(self, event: dict) -> int:
+        return event.btn_id
+
+    def get_joystick_event_data(self, event: dict) -> tuple[int, JoystickState]:
+        return event.stick_id, JoystickState

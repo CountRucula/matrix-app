@@ -8,7 +8,7 @@ from typing import Literal
 
 # genrated ui
 from qt.generated.UI_game import Ui_TabGame
-from ui.Input import InputDevice, Event
+from ui.Input import InputDevice, JoystickState
 
 from rendering.RenderManager import RenderManager
 from rendering.GameMode import SnakeMode, Direction, PongMode
@@ -73,21 +73,21 @@ class TabGame(QWidget, Ui_TabGame):
     def preview_game(self):
         self.renderer.PreviewMode(self.selected_game)
 
-    def handle_joystick(self, event: Event):
-        match event:
-            case Event.JoystickToLeft:
+    def handle_joystick(self, stick: int, state: JoystickState):
+        match state:
+            case JoystickState.Left:
                 self.snake_mode.change_direction(Direction.LEFT)
 
-            case Event.JoystickToRight:
+            case JoystickState.Right:
                 self.snake_mode.change_direction(Direction.RIGHT)
 
-            case Event.JoystickToTop:
+            case JoystickState.Top:
                 self.snake_mode.change_direction(Direction.UP)
 
-            case Event.JoystickToBottom:
+            case JoystickState.Bottom:
                 self.snake_mode.change_direction(Direction.DOWN)
 
-    def handle_button(self):
+    def handle_button(self, btn: int):
         if self.selected_game == 'Snake':
             self.snake_mode.start_pause()
 
