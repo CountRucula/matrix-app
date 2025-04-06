@@ -24,6 +24,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(800, 600)
+        MainWindow.setBaseSize(QSize(800, 480))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -76,6 +77,13 @@ class Ui_MainWindow(object):
         self.lbl_matrix_status.setSizePolicy(sizePolicy)
 
         self.footer_layout.addWidget(self.lbl_matrix_status)
+
+        self.line_5 = QFrame(self.centralwidget)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setFrameShape(QFrame.Shape.VLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.footer_layout.addWidget(self.line_5)
 
         self.label_5 = QLabel(self.centralwidget)
         self.label_5.setObjectName(u"label_5")

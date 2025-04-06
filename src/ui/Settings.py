@@ -30,6 +30,7 @@ class TabSettings(QWidget, Ui_TabSettings):
         # title
         self.lbl_matrix_conn.setProperty('class', 'title')
         self.lbl_gamma_corr.setProperty('class', 'title')
+        self.lbl_calibration.setProperty('class', 'title')
 
         # icons
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'
@@ -48,6 +49,12 @@ class TabSettings(QWidget, Ui_TabSettings):
         # try to connect
         self.btn_matrix_connect.clicked.emit()
         self.btn_controller_connect.clicked.emit()
+
+        # calibration
+        self.btn_cal_poti_left_min.clicked.connect(lambda: self.calibrate_poti(0, 'min'))
+        self.btn_cal_poti_left_max.clicked.connect(lambda: self.calibrate_poti(0, 'max'))
+        self.btn_cal_poti_right_min.clicked.connect(lambda: self.calibrate_poti(1, 'min'))
+        self.btn_cal_poti_right_max.clicked.connect(lambda: self.calibrate_poti(1, 'max'))
 
         # gamma correction
         self.gamma_mode = TestGammaMode(width, height)
@@ -75,6 +82,15 @@ class TabSettings(QWidget, Ui_TabSettings):
 
         self.gamma_mode.set_color(self.gamma_channel)
         self.gamma_mode.set_gamma(self.gamma[self.gamma_channel])
+
+    def calibrate_poti(self, poti: int, what: Literal['min', 'max']):
+        if poti == 0:
+            raw = self.input.poti_0_raw
+        else:
+            raw = self.input.poti_1_raw
+
+        self.poti_calib[poti][what] = raw
+        self.input.controller.calibrate_poti(poti, self.poti_calib[poti]['max'], self.poti_calib[poti]['min'])
 
     def displayGammaTest(self, channel: ColorChannel):
         self.gamma_channel = channel
