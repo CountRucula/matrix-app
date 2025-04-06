@@ -5,23 +5,17 @@ import time
 from controller.Controller import Controller, ButtonState, JoystickState, Event
 import logging
 
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 class InputDevice(QObject):
     btn_pressed = Signal(int)
     btn_released = Signal(int)
-
     joystick_changed = Signal(int, JoystickState)
-
     poti_moved = Signal(int, float)
 
-    btn_state: ButtonState
-    stick_state: JoystickState
-    poti_0: float = 0
-    poti_1: float = 0
-
-    poti_0_raw: int = 0
-    poti_1_raw: int = 0
+    btn_states = [ButtonState.Released, ButtonState.Released]
+    stick_states = [JoystickState]
+    poti_states = [{'pos': 0.0, 'raw': 0}, {'pos': 0.0, 'raw': 0}]
 
     def __init__(self, controller: Controller, parent = None):
         super().__init__(parent)
@@ -35,6 +29,10 @@ class InputDevice(QObject):
 
     def start(self, dev: str):
         self.controller.connect(dev)
+
+        # read initial values
+        self.read_values()
+
         self.poll_thread = Thread(target=self.loop, daemon=True)
         self.running = True
         self.poll_thread.start()
@@ -44,17 +42,17 @@ class InputDevice(QObject):
         self.poll_thread.join()
         self.controller.disconnect()
 
+    def read_values(self):
+        self.btn_states[0]          = self.controller.get_btn_state()
+        self.stick_states[0]        = self.controller.get_joystick_state()
+        self.poti_states[0]['raw']  = self.controller.get_poti_raw(0)
+        self.poti_states[1]['raw']  = self.controller.get_poti_raw(1)
+        self.poti_states[0]['pos']  = self.controller.get_poti_pos(0)
+        self.poti_states[1]['pos']  = self.controller.get_poti_pos(1)
+
     def poll(self):
         if not self.controller.connected():
             return
-
-        # read states
-        self.btn_state = self.controller.get_btn_state()
-        self.stick_state = self.controller.get_joystick_state()
-        self.poti_0_raw = self.controller.get_poti_raw(0)
-        self.poti_1_raw = self.controller.get_poti_raw(1)
-        new_poti_0 = self.controller.get_poti_pos(0)
-        new_poti_1 = self.controller.get_poti_pos(1)
 
         # handle events
         events = self.controller.get_events()
@@ -64,30 +62,34 @@ class InputDevice(QObject):
                 case Event.BtnPressed:
                     btn = e.btn_id
                     logging.info(f"btn {btn} pressed")
+
+                    self.btn_states[btn] = ButtonState.Pressed
                     self.btn_pressed.emit(btn)
 
                 case Event.BtnReleased:
                     btn = e.btn_id
                     logging.info(f"btn {btn} released")
+
+                    self.btn_states[btn] = ButtonState.Released
                     self.btn_released.emit(btn)
 
                 case Event.JoystickChanged:
                     stick = e.stick_id
                     state = e.state
                     logging.info(f"joystick {stick} moved: {state}")
+
+                    self.stick_states[stick] = state
                     self.joystick_changed.emit(stick, state)
 
-        # check if potis have moved
-        if abs(new_poti_0-self.poti_0) > 0.5:
-            logging.info(f"poti 0 moved: {new_poti_0:.1f}")
-            self.poti_moved.emit(0, new_poti_0)
+                case Event.PotiChanged:
+                    poti = e.poti_id
+                    pos = e.pos
+                    raw = e.raw
+                    logging.info(f"poti {poti} moved: {pos:.1f} , {raw}")
 
-        if abs(new_poti_1-self.poti_1) > 0.5:
-            logging.info(f"poti 1 moved: {new_poti_1:.1f}")
-            self.poti_moved.emit(1, new_poti_1)
-
-        self.poti_0 = new_poti_0
-        self.poti_1 = new_poti_1
+                    self.poti_states[poti]['raw'] = raw
+                    self.poti_states[poti]['pos'] = pos
+                    self.poti_moved.emit(poti, pos)
 
     def loop(self):
         while self.running:

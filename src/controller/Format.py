@@ -30,7 +30,7 @@ class Event(enum.Enum):
     BtnPressed          = 0x01
     BtnReleased         = 0x02
     JoystickChanged     = 0x03
-    
+    PotiChanged         = 0x04
 
 POTI_NRS = Literal[0, 1]
 
@@ -88,7 +88,12 @@ class ControllerFormat(SerialFormat):
                         Event.JoystickChanged : Struct(
                             "stick_id" / Byte,
                             "state" / EnumAdapter(Enum(Byte, JoystickState), JoystickState) 
-                        ) 
+                        ),
+                        Event.PotiChanged: Struct(
+                            "poti_id" / Byte,
+                            "pos" / Float32l,
+                            "raw" / Int16ul
+                        ),
                     })
                 ))
             ),

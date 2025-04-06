@@ -87,10 +87,7 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.gamma_mode.set_gamma(self.gamma[self.gamma_channel])
 
     def calibrate_poti(self, poti: int, what: Literal['min', 'max']):
-        if poti == 0:
-            raw = self.input.poti_0_raw
-        else:
-            raw = self.input.poti_1_raw
+        raw = self.input.poti_states[poti]['raw']
 
         self.poti_calib[poti][what] = raw
         self.input.controller.calibrate_poti(poti, self.poti_calib[poti]['max'], self.poti_calib[poti]['min'])
