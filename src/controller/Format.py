@@ -54,8 +54,8 @@ class ControllerFormat(SerialFormat):
             ),
             self.commands.CalibratePoti: Struct(
                 "poti_nr" / Byte,
-                "min" / Byte,
-                "max" / Byte
+                "min" / Int16ul,
+                "max" / Int16ul
             ),
             self.commands.GetBtnState: Struct(),
             self.commands.GetJoystickState: Struct(),
