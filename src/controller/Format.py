@@ -54,18 +54,20 @@ class ControllerFormat(SerialFormat):
                 "min" / Int16ul,
                 "max" / Int16ul
             ),
-            self.commands.GetBtnState: Struct(),
-            self.commands.GetJoystickState: Struct(),
+            self.commands.GetBtnState: Struct(
+                "btn_id" / Byte,
+            ),
+            self.commands.GetJoystickState: Struct(
+                "stick_id" / Byte,
+            ),
             self.commands.GetEvents: Struct(),
         })
 
         self.response_table.update({
             self.commands.GetPotiPos: Struct(
-                "poti_nr" / Byte,
                 "poti_pos" / Float32l
             ),
             self.commands.GetPotiRaw: Struct(
-                "poti_nr" / Byte,
                 "poti_raw" / Int16ul
             ),
             self.commands.CalibratePoti: Struct(),
@@ -108,20 +110,20 @@ class ControllerFormat(SerialFormat):
     def build_cmd_calibrate_poti(self, poti_nr: POTI_NRS, raw_max: int = 4095, raw_min: int = 0) -> bytes:
         return self.command_builder.build( self.commands.CalibratePoti, dict(poti_nr = poti_nr, max=raw_max, min=raw_min))
 
-    def build_cmd_get_btn_state(self) -> bytes:
-        return self.command_builder.build(self.commands.GetBtnState)
+    def build_cmd_get_btn_state(self, btn: int) -> bytes:
+        return self.command_builder.build(self.commands.GetBtnState, dict(btn_id=btn))
 
     def build_cmd_get_events(self) -> bytes:
         return self.command_builder.build(self.commands.GetEvents)
 
-    def build_cmd_get_joystick_state(self) -> bytes:
-        return self.command_builder.build(self.commands.GetJoystickState)
+    def build_cmd_get_joystick_state(self, stick: int) -> bytes:
+        return self.command_builder.build(self.commands.GetJoystickState, dict(stick_id=stick))
 
     def get_poti_pos(self, data: dict) -> tuple[int, float]:
-        return data.poti_nr, data.poti_pos
+        return data.poti_pos
 
     def get_poti_raw(self, data: dict) -> tuple[int, int]:
-        return data.poti_nr, data.poti_raw
+        return data.poti_raw
 
     def get_btn_state(self, data: dict) -> ButtonState:
         return data.state

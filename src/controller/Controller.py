@@ -30,7 +30,7 @@ class Controller(Device):
             if cmd is None or data is None:
                 return None
 
-            return self.format.get_poti_pos(data)[1]
+            return self.format.get_poti_pos(data)
 
     def get_poti_raw(self, poti_nr: POTI_NRS) -> int:
         if self.link.connected:
@@ -40,11 +40,11 @@ class Controller(Device):
             if cmd is None or data is None:
                 return None
 
-            return self.format.get_poti_raw(data)[1]
+            return self.format.get_poti_raw(data)
     
-    def get_btn_state(self) -> ButtonState:
+    def get_btn_state(self, btn: int) -> ButtonState:
         if self.link.connected:
-            raw = self.format.build_cmd_get_btn_state()
+            raw = self.format.build_cmd_get_btn_state(btn)
             cmd, data = self.send_and_receive(raw)
 
             if cmd is None or data is None:
@@ -62,9 +62,9 @@ class Controller(Device):
 
             return self.format.get_events(data)
 
-    def get_joystick_state(self) -> JoystickState:
+    def get_joystick_state(self, stick: int) -> JoystickState:
         if self.link.connected:
-            raw = self.format.build_cmd_get_joystick_state()
+            raw = self.format.build_cmd_get_joystick_state(stick)
             cmd, data = self.send_and_receive(raw)
 
             if cmd is None or data is None:

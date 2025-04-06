@@ -43,8 +43,9 @@ class InputDevice(QObject):
         self.controller.disconnect()
 
     def read_values(self):
-        self.btn_states[0]          = self.controller.get_btn_state()
-        self.stick_states[0]        = self.controller.get_joystick_state()
+        self.btn_states[0]          = self.controller.get_btn_state(0)
+        self.btn_states[1]          = self.controller.get_btn_state(1)
+        self.stick_states[0]        = self.controller.get_joystick_state(0)
         self.poti_states[0]['raw']  = self.controller.get_poti_raw(0)
         self.poti_states[1]['raw']  = self.controller.get_poti_raw(1)
         self.poti_states[0]['pos']  = self.controller.get_poti_pos(0)
