@@ -1,9 +1,23 @@
 #title, .title {{
-  font-size: 22px;
-  font-weight: bold;
+    font-size: 22px;
+    font-weight: bold;
+}}
+
+QDoubleSpinBox, QComboBox {{
+    color: {QTMATERIAL_SECONDARYTEXTCOLOR};
 }}
 
 QLabel#img_path {{
-  border: 1px solid #6F6F6F;
-  padding: 5px;
+    border: 1px solid #6F6F6F;
+    padding: 5px;
+}}
+
+.mode-btn {{
+    font-size: 18px;
+    font-weight: bold;
+}}
+
+.mode-btn:checked{{
+    border: 0px;
+    border-bottom: 12px solid {QTMATERIAL_PRIMARYCOLOR};
 }}
