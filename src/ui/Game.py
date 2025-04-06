@@ -21,6 +21,7 @@ class TabGame(QWidget, Ui_TabGame):
         self.input: InputDevice = input_dev
         self.input.joystick_changed.connect(self.handle_joystick)
         self.input.btn_pressed.connect(self.handle_button)
+        self.input.poti_moved.connect(self.handle_poti)
 
         # load game icons
         self.load_icons()
@@ -89,6 +90,9 @@ class TabGame(QWidget, Ui_TabGame):
     def handle_button(self):
         if self.selected_game == 'Snake':
             self.snake_mode.start_pause()
+
+    def handle_poti(self, poti: int, pos: float):
+        self.pong_mode.set_player_pos(poti+1, pos)
 
     def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key_Up:

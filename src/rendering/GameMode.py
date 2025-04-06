@@ -330,6 +330,20 @@ class PongMode(RenderMode):
         self.round_running = False
         self.round_countdown = 1.0
 
+    def set_player_pos(self, player: int, pos: float):
+        max_y = self.height-self.player_length
+
+        pos = pos/100.0*max_y
+        pos = max(min(pos, max_y), 0)
+
+        match player:
+            case 1:
+                self.player1 = pos
+
+            case 2:
+                self.player2 = pos
+
+
     def set_player_dir(self, player: int, direction: int):
         direction = max(min(direction, 1), -1)
 
@@ -563,8 +577,8 @@ class PongMode(RenderMode):
 
             if self.round_countdown <= 0:
                 # move players
-                self.player1 = self.move_player(self.player1, self.player1_speed, elapsed)
-                self.player2 = self.move_player(self.player2, self.player2_speed, elapsed)
+                #self.player1 = self.move_player(self.player1, self.player1_speed, elapsed)
+                #self.player2 = self.move_player(self.player2, self.player2_speed, elapsed)
 
                 # move ball
                 if self.ball is not None:
