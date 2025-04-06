@@ -331,7 +331,7 @@ class PongMode(RenderMode):
         self.round_countdown = 1.0
 
     def set_player_pos(self, player: int, pos: float):
-        max_y = self.height-self.player_length
+        max_y = float(self.height-self.player_length) - 1e-6
 
         pos = pos/100.0*max_y
         pos = max(min(pos, max_y), 0)
