@@ -4,7 +4,6 @@ import numpy as np
 import random
 from colorsys import hsv_to_rgb
 from abc import abstractmethod
-from scipy import ndimage
 
 class WaveMode(RenderMode):
     def __init__(self, width, height):
@@ -12,6 +11,9 @@ class WaveMode(RenderMode):
 
         self.f = 0.2
         self.waves = 2
+        
+        self.A = 0.8*self.height/2
+        self.offset = self.height/2
 
         self.z = np.arange(width)
 
@@ -19,14 +21,15 @@ class WaveMode(RenderMode):
 
     def render(self):
         t = time.time() % self.window
-        y = self.evaluate(self.k*self.z + self.b*t)
+        x, y = self.evaluate(self.k*self.z + self.b*t)
+        y = self.A*y + self.offset
 
         self.clear()
 
-        old_x = 0
+        old_x = x[0]
         old_y = y[0]
 
-        for x,y in enumerate(y,1):
+        for x,y in zip(x[1:],y[1:]):
             self.draw_line(old_x, old_y, x, y, np.array((255,255,255), np.uint8))
             old_x = x
             old_y = y
@@ -42,7 +45,7 @@ class WaveMode(RenderMode):
         self.window = self.width / self.f
 
     @abstractmethod
-    def evaluate(self, phi):
+    def evaluate(self, phi) -> tuple[np.ndarray, np.ndarray]:
         pass
 
 class SineWaveMode(WaveMode):
@@ -52,36 +55,72 @@ class SineWaveMode(WaveMode):
         self.f = 0.5
         self.update()
 
-    def evaluate(self, phi):
-        return np.sin(phi)*0.4*self.height + self.height/2
+        self.x = np.arange(self.width)
+        
+    def evaluate(self, phi) -> tuple[np.ndarray, np.ndarray]:
+        return self.x, np.sin(phi)
 
 
 class SawtoothMode(WaveMode):
     def __init__(self, width, height):
         super().__init__(width, height)
 
-        self.f = 0.8
-
+        self.f = 0.5
         self.update()
+        
+    def eval(self, phi):
+        return phi/np.pi if phi < np.pi else phi/np.pi-2
 
-    def evaluate(self, phi):
-        phi = phi % (2*np.pi)
-        y = np.where(phi < np.pi, phi/np.pi, phi/np.pi - 2)
-        y = y*0.4*self.height + self.height/2
-        return y
+    def evaluate(self, phi) -> tuple[np.ndarray, np.ndarray]:
+        phi = phi[0] % (2*np.pi)
+
+        y = [self.eval(phi)]
+        x = [0]
+        
+        dphi = np.pi - phi if phi < np.pi else 3*np.pi - phi
+
+        while x[-1] < self.width:
+            x_new = x[-1] + dphi/self.k
+
+            y.append(1) 
+            x.append(x_new)
+            y.append(-1) 
+            x.append(x_new)
+        
+            dphi = 2*np.pi
+
+        y = np.array(y)
+        x = np.array(x)
+        return x, y
 
 class RectangularMode(WaveMode):
     def __init__(self, width, height):
         super().__init__(width, height)
 
-        self.f = 0.8
+        self.f = 0.5
         self.update()
 
-    def evaluate(self, phi):
-        phi = phi % (2*np.pi)
-        y = np.where(phi < np.pi, -1, 1)
-        y = y*0.4*self.height + self.height/2
-        return y
+    def evaluate(self, phi) -> tuple[np.ndarray, np.ndarray]:
+        phi = phi[0] % (2*np.pi)
+
+        y = [-1 if phi < np.pi else 1]
+        x = [0]
+        
+        while x[-1] < self.width:
+            dphi = np.pi - (phi % np.pi)
+            x_new = x[-1] + dphi/self.k
+
+            y.append(y[-1]) 
+            x.append(x_new)
+            y.append(-y[-1]) 
+            x.append(x_new)
+
+            phi += dphi
+        
+        y = np.array(y)
+        x = np.array(x)
+
+        return x, y
 
 class RaindropsMode(RenderMode):
     def __init__(self, width, height):
