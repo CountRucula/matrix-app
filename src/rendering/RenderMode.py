@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from fonts import font_5x7
 
 class RenderMode(ABC):
     def __init__(self, width, height):
@@ -68,7 +69,7 @@ class RenderMode(ABC):
         
         # points inbetween
         y = y0
-        for x in range(int(x0+1), int(x1)):
+        for x in range(int(x0+1), int(x1+0.5)):
             y_lower = int(y)
             y_upper = int(y) + 1
 
@@ -83,7 +84,50 @@ class RenderMode(ABC):
                 self.add_pixel(x, y_upper, c_upper, buffer)
 
             y += m
+            
+    def draw_text(self, text: str, pos: tuple[int, int], fg: np.ndarray, bg: np.ndarray = (0,0,0), font = font_5x7.Characters, hcenter = False, vcenter = False):
+        x,y = pos
+        
+        # text -> bitmaps
+        if text is not str:
+            text = str(text)
+            
+        text = text.upper()
+        bitmaps = np.array([font[c] for c in text])
+        n, cH, cW = bitmaps.shape[:3]
+        
+        width = n*(cW+1)-1
+        heigth = cH
+        
+        # center text if necessary
+        if hcenter:
+            x = (self.width - width)//2
 
+        if vcenter:
+            y = (self.height - heigth)//2
+        
+        # draw background
+        if bg is not None:
+            x1 = max(0, x-1)
+            y1 = max(0, y-1)
+            
+            x2 = min(self.width-1,  x + width + 1)
+            y2 = min(self.height-1, y + heigth + 1)
+            
+            self.framebuffer[y1:y2, x1:x2] = bg
+        
+        # draw text
+        for bitmap in bitmaps:
+            # stop if there is not enough space
+            if not (0 <= x <= self.width-cW) or not (0 <= y <= self.height-cH):
+                continue
+
+            # draw onto framebuffer
+            self.framebuffer[y:y+cH, x:x+cW] = np.einsum('ik,j->ikj', bitmap, fg)
+            
+            # new position
+            x += cW + 1
+ 
     def set_param(self, **kwargs):
         for key, val in kwargs.items():
             self.params[key] = val
