@@ -57,8 +57,32 @@ class Matrix(Device):
         return data.astype(dtype=np.uint8)
 
     def display(self, data: np.ndarray):
+        """Displays a frame on the matrix
+        
+        The data get gamma corrected to allow for somewhat correct colors. 
+
+        Also the data gets reorganised from
+
+        0======================> <br>
+        =======================> <br>
+        =======================> <br>
+        =======================> <br>
+        
+        to 
+
+        =======================> <br>
+        <======================= <br>
+        =======================> <br>
+        <======================0 <br>
+
+        Args:
+            data (np.ndarray): led data with shape (height, width, 3)
+        """
         if self.link.connected:
-            data = data.reshape(-1, data.shape[-1])  # flatten data (rows, cols, 3) => (rows*cols, 3)
             data = self.apply_gamma_correction(data)
+            data[::2] = data[::2, ::-1] # flip every 2nd row
+            data[:] = data[::-1] # flip y
+
+            data = data.reshape(-1, data.shape[-1])  # flatten data (rows, cols, 3) => (rows*cols, 3)
             raw = self.format.build_cmd_set_frame(data)
             self.link.SendFrame(raw)
