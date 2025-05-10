@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget, QSlider, QLabel
+from PySide6.QtWidgets import QWidget, QSlider, QLabel, QScroller
 from PySide6.QtGui import QStandardItem, QIcon
 import PySide6.QtCore as QtCore
 
@@ -26,6 +26,8 @@ class TabMusic(QWidget, Ui_TabMusic):
         self.renderer.AddMode('Timeline', self.timeline_mode)
         self.renderer.AddMode('Timeline-Dual', self.timeline_mode)
         self.renderer.AddMode('Freq-Bands', self.bands_mode)
+        
+        QScroller.grabGesture(self.scrollArea.viewport(), QScroller.LeftMouseButtonGesture)
 
         # register callbacks
         self.btn_mode_timeline.clicked.connect(lambda: self.select_animation('Timeline'))
