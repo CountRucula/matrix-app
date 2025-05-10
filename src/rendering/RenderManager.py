@@ -25,7 +25,7 @@ class RenderManager:
 
         self.on_mode_changed = on_mode_changed
         self.on_preview_mode_changed = on_preview_mode_changed
-
+        
     def SetSize(self, width, height) -> None:
         self.width = width
         self.height = height
@@ -44,11 +44,18 @@ class RenderManager:
 
     def SelectMode(self, name: str) -> None:
         if name in self.modes:
-            self.active_mode = self.modes[name]
+            new_mode = self.modes[name]
             self.on_mode_changed(name)
 
-            if self.active_mode != self.preview_mode:
-                self.active_mode.reset()
+            # if new mode is not started => start
+            if new_mode not in [self.preview_mode, self.active_mode]:
+                new_mode.start_mode()
+                
+            # if active mode is no longer required => stop
+            if self.active_mode is not None and self.active_mode not in [self.preview_mode, new_mode]:
+                self.active_mode.stop_mode()
+                
+            self.active_mode = new_mode
     
     def EnableMatrixOutput(self):
         self.hardware_matrix_enabled = True
@@ -62,11 +69,19 @@ class RenderManager:
 
     def PreviewMode(self, name: str) -> None:
         if name in self.modes:
-            self.preview_mode = self.modes[name]
+            new_mode = self.modes[name]
             self.on_preview_mode_changed(name)
 
-            if self.preview_mode != self.active_mode:
-                self.preview_mode.reset()
+            # if new mode is not started => start
+            if new_mode not in [self.preview_mode, self.active_mode]:
+                new_mode.start_mode()
+
+            # if active mode is no longer required => stop
+            if self.preview_mode is not None and self.preview_mode not in [self.preview_mode, new_mode]:
+                self.preview_mode.stop_mode()
+                
+            self.preview_mode = new_mode
+
 
     def Start(self) -> None:
         self.running = True

@@ -100,7 +100,7 @@ class SnakeMode(RenderMode):
 
         else:
             if self.game_over:
-                self.reset()
+                self.start_mode()
                 self.place_apple()
                 self.game_over = False
 
@@ -356,9 +356,9 @@ class PongMode(RenderMode):
 
         self.winning_score = 9
 
-        self.reset()
+        self.start_mode()
 
-    def reset(self):
+    def start_mode(self):
         self.game_running = False
         self.ball = None
         self.ball_speed = 0.0
@@ -1355,9 +1355,9 @@ class PacManMode(RenderMode):
         
         self.max_speed = 8
 
-        self.reset()
+        self.start_mode()
         
-    def reset(self):
+    def start_mode(self):
         self.score = 0
         self.lives = 0
         self.running = False

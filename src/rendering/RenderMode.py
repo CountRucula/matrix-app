@@ -138,7 +138,10 @@ class RenderMode(ABC):
 
         self.clear()
 
-    def reset(self):
+    def start_mode(self):
+        self.clear()
+        
+    def stop_mode(self):
         self.clear()
 
     def clear(self):

@@ -81,7 +81,7 @@ class GifMode(RenderMode):
         except Exception as e:
             logging.error(f"can't load image: {e}")
 
-    def reset(self):
+    def start_mode(self):
         self.idx = 0
         self.start = time.time()
 

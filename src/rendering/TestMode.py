@@ -19,7 +19,7 @@ class TestGammaMode(RenderMode):
             self.color = np.array((255,0,0))
         elif channel == 'green':
             self.color = np.array((0,255,0))
-        else:
+        elif channel == 'blue':
             self.color = np.array((0,0,255))
 
         self.draw()
