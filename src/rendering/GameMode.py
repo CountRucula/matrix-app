@@ -322,9 +322,9 @@ class PongMode(RenderMode):
         self.player_color = np.array((255,255,255))
 
         self.middle_line_width = 2
-        self.middle_line_color = np.array((255, 0, 0))
+        self.middle_line_color = np.array((249, 57, 67))
 
-        self.score_color = np.array((0, 255, 0))
+        self.score_color = np.array((249, 57, 67))
 
         self.start_time = time.time()
 
@@ -373,9 +373,8 @@ class PongMode(RenderMode):
             case 2:
                 self.player2_speed = direction * self.player_speed
 
-    def move_ball(self, phi: int, delta_t: float):
-        # wrap phase
-        phi = (phi+np.pi) % (2*np.pi) - np.pi
+    def move_ball(self, phi: float, delta_t: float):
+        phi = self.limit_angle(phi)
 
         x,y = self.ball
 
@@ -405,8 +404,23 @@ class PongMode(RenderMode):
         if y >= (self.height - self.ball_size/2 - 1e-6) and (0 < phi < np.pi):
             self.ball_dir = -self.ball_dir
             y = self.height - (self.ball_size/2 + 1e-6)
+            
+        # limit angle of ball
+        self.ball_dir = self.limit_angle(self.ball_dir)
 
         self.ball = (x,y)
+        
+    def limit_angle(self, phi: float):
+        # wrap phase
+        phi = (phi+np.pi) % (2*np.pi) - np.pi
+
+        if abs(phi) <= np.pi/2:
+           phi = max(-np.pi/4, min(np.pi/4, phi)) 
+           
+        else:
+           phi = max(np.pi*3/4, phi) if phi > 0 else min(-np.pi*3/4, phi)
+           
+        return phi
 
     def handle_collision(self, side: Literal['left', 'right']) -> bool:
         _,yb = self.ball
@@ -1300,7 +1314,7 @@ class GhostClyde(Ghost):
         
         distance = self.grit_cotbl[self.sprite_normal.dir][round(y), round(x), round(yt), round(xt)]
 
-        if distance > 30:
+        if distance > 15:
             self.optimal_direction(self.sprite_normal, pacman.pos)
         else:
             self.optimal_direction(self.sprite_normal, self.corner)
