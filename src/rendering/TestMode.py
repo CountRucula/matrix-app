@@ -33,5 +33,5 @@ class TestGammaMode(RenderMode):
     def render(self):
         return self.framebuffer
 
-    def reset(self):
+    def start_mode(self):
         pass

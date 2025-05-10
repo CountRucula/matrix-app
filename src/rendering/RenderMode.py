@@ -1,6 +1,33 @@
 from abc import ABC, abstractmethod
 import numpy as np
 from fonts import font_5x7
+from PIL import Image
+import logging
+
+def load_img(path):
+    try:
+        with Image.open(path) as img:
+            return np.array(img.convert('RGB'))
+    except Exception as e:
+        logging.error(f"can't load image: {e}")
+
+def load_gif(path):
+    try:
+        with Image.open(path) as img:
+            frames = []
+            
+            while True:
+                duration = img.info.get('duration', 50)  # Duration in milliseconds
+                
+                frames.append((np.array(img.convert('RGB')), duration))
+                try:
+                    img.seek(img.tell() + 1)
+                except EOFError:
+                    break
+
+            return frames
+    except Exception as e:
+        logging.error(f"can't load gif: {e}")
 
 class RenderMode(ABC):
     def __init__(self, width, height):

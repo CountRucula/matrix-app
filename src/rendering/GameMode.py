@@ -1,14 +1,12 @@
-from rendering.RenderMode import RenderMode
+from rendering.RenderMode import RenderMode, load_gif, load_img
 import numpy as np
 import enum
 from collections import deque
 import time
 import random
 from typing import Literal
-from PIL import Image
 from fonts import font_5x7
 from pathlib import Path
-import logging
 from functools import total_ordering
 
 @total_ordering
@@ -34,30 +32,6 @@ class Direction(enum.Enum):
     def inv(self):
         return Direction(Direction.inverse.value[self.value])
 
-def load_img(path):
-    try:
-        with Image.open(path) as img:
-            return np.array(img.convert('RGB'))
-    except Exception as e:
-        logging.error(f"can't load image: {e}")
-
-def load_gif(path):
-    try:
-        with Image.open(path) as img:
-            frames = []
-            
-            while True:
-                duration = img.info.get('duration', 50)  # Duration in milliseconds
-                
-                frames.append((np.array(img.convert('RGB')), duration))
-                try:
-                    img.seek(img.tell() + 1)
-                except EOFError:
-                    break
-
-            return frames
-    except Exception as e:
-        logging.error(f"can't load gif: {e}")
 
 class SnakeMode(RenderMode):
     def __init__(self, width, height):
@@ -71,11 +45,11 @@ class SnakeMode(RenderMode):
         self.apple_color        = (255,   0,   0)
         self.apple_stem_color   = ( 86,  59,  12)
 
-        self.reset()
+        self.start_mode()
 
         self.f = 5
 
-    def reset(self):
+    def start_mode(self):
         self.clear()
         self.game_running = False
         self.game_over = True
@@ -501,7 +475,7 @@ class PongMode(RenderMode):
 
 
     def game_start(self):
-        self.reset()
+        self.start_mode()
         self.round_start()
 
         self.game_running = True
