@@ -1,11 +1,9 @@
-from rendering.RenderMode import RenderMode
+from rendering.RenderMode import RenderMode, load_img, load_gif
 import numpy as np
 import pyaudio
 import logging
 from abc import abstractmethod
-from scipy import signal
-
-audio_client = None
+from pathlib import Path
 
 class MusicMode(RenderMode):
     def __init__(self, width, height):
@@ -18,18 +16,16 @@ class MusicMode(RenderMode):
         self.rate = 48000
 
         self.stream = None
+        
+    def start_mode(self):
+        self.open_stream()
+        
+    def stop_mode(self):
+        self.close_stream()
 
     def open_stream(self):
-        global audio_client
-
-        if audio_client:
-            audio_client.close_stream()
-            audio_client = None
-
         try:
-            self.stream = self.p.open(format=pyaudio.paInt16, channels=2, rate=self.rate, input=True, frames_per_buffer=self.frames, stream_callback=self.callback)
-
-            audio_client = self
+            self.stream = self.p.open(format=pyaudio.paInt16, channels=2, rate=self.rate, input=True, frames_per_buffer=self.frames, stream_callback=lambda *args, **kwargs: self.callback(*args, **kwargs))
 
         except Exception as e:
             logging.error(f"Audio device missing? {e}")
@@ -39,13 +35,11 @@ class MusicMode(RenderMode):
         self.stream.stop_stream()
         self.stream.close()
 
-    @staticmethod
-    def callback(data, frame_count, time_info, status_flags):
-        global audio_client
-
+    def callback(self, data, frame_count, time_info, status_flags):
         data = np.array(np.frombuffer(data, dtype=np.int16), dtype=float, copy=True)
+        data = data.reshape((-1, 2))
 
-        audio_client.process_audio(data)
+        self.process_audio(data)
 
         return (bytes(), pyaudio.paContinue)
 
@@ -89,38 +83,98 @@ class TimelineMode(MusicMode):
 class FrequencyBandsMode(MusicMode):
     def __init__(self, width, height):
         super().__init__(width, height)
+        
+        self.frames = 8*1024
 
-        self.start_freq = 60
-        self.stop_freq = 20000
+        self.f_range = [60, 15000]
+        self.db_range = [-20, 50]
 
-        self.bins = 6
+        self.new_f_range = [60, 15000]
+        self.new_db_range = [-20, 50]
+        
+        self.spacing = 1
 
-        self.sensitivity = 75
+        self.bin_width = 2
+        self.bins = self.width//self.bin_width
+
+        assets = (Path(__file__).parent / '../../assets').resolve()
+        self.colors = load_img(assets/'Bands-Colors.png')
+        
+    def set_a_max(self, a_max):
+        self.new_db_range[1] = a_max
+        
+        if self.new_db_range[1] > self.new_db_range[0]:
+            self.db_range = self.new_db_range.copy()
+        
+    def set_a_min(self, a_min):
+        self.new_db_range[0] = a_min
+
+        if self.new_db_range[1] > self.new_db_range[0]:
+            self.db_range = self.new_db_range.copy()
+
+    def set_f_max(self, f_max):
+        self.new_f_range[1] = min(f_max, self.rate//2)
+        
+        if self.new_f_range[1] > self.new_f_range[0]:
+            self.f_range = self.new_f_range.copy()
+        
+    def set_f_min(self, f_min):
+        self.new_f_range[0] = f_min
+
+        if self.new_f_range[1] > self.new_f_range[0]:
+            self.f_range = self.new_f_range.copy()
+        
+    def set_bin_width(self, width):
+        self.bin_width = width
+        self.bins = int(np.ceil(self.width / (self.bin_width+self.spacing)))
+        
+    def set_spacing(self, spacing):
+        self.spacing = spacing
+        self.set_bin_width(self.bin_width)
+        
+    def log_frequency_bands(self, fft):
+        # Create log-spaced frequency band edges
+        band_edges = np.logspace(np.log10(self.f_range[0]), np.log10(self.f_range[1]), self.bins + 1)
+        
+        N = len(fft)
+        
+        # Convert to bin indices
+        bands = []
+        for i in range(self.bins):
+            idx_start = round(band_edges[i]/self.rate*N)
+            idx_end = round(band_edges[i+1]/self.rate*N)
+            bands = fft[idx_start:idx_end]
+
+        return bands
 
     def process_audio(self, data):
-        N = len(data)
-        fs = self.rate
+        N = data.shape[0]
+        X = 20*np.log10(np.abs(np.fft.fft(data[:,0])) / N + 1e-6)
+        
+        bands = self.log_frequency_bands(X)
+        intensities = np.array([np.mean(band) for band in bands])
 
-        df = fs/N
-        X = np.abs(np.fft.fft(data)) / N
-
-        start = int(self.start_freq / df)
-        stop  = int(self.stop_freq  / df)
-
-        bin_len = (stop - start)/self.bins
-
-        for i, start in enumerate(np.arange(start, stop+1, bin_len)):
-            m = np.mean(X[int(start):int(start+bin_len)]**2)
-
-            self.draw_bin(i, m)
-
+        # clip and normalize to 0 - 1
+        intensities = np.clip(intensities, *self.db_range)
+        intensities = (intensities - self.db_range[0]) / (self.db_range[1] - self.db_range[0])
+        
+        for i, intensity in enumerate(intensities):
+            self.draw_bin(i, intensity)
+        
     def draw_bin(self, index: int, value: float):
-        y_start =  self.height - int(value * self.height // self.sensitivity)
-        x_start = self.width//self.bins*index
-        x_end = self.width//self.bins*(index+1)
+        width = self.bin_width+self.spacing
 
-        self.framebuffer[y_start:, x_start:x_end] = (255,255,255)
+        y_start =  self.height - int(value * self.height)
+        x_start = width*index
+        x_end = min(x_start+self.bin_width, self.width)
+
+        self.framebuffer[y_start:, x_start:x_end] = self.colors[y_start:, x_start:x_end]
         self.framebuffer[:y_start, x_start:x_end] = (0,0,0)
+        
+        if x_end < self.width:
+            spacing_start = x_end
+            spacing_end = min(spacing_start + self.spacing, self.width)
+            self.framebuffer[:, spacing_start:spacing_end] = (0,0,0)
 
     def render(self):
         return self.framebuffer

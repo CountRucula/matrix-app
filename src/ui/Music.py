@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QSlider, QLabel
 from PySide6.QtGui import QStandardItem, QIcon
 import PySide6.QtCore as QtCore
 
@@ -34,7 +34,33 @@ class TabMusic(QWidget, Ui_TabMusic):
 
         self.btn_display.clicked.connect(self.start_animation)
         self.btn_preview.clicked.connect(self.preview_animation)
+        
+        # mode settings
+        self.select_animation(mode='Timeline')
 
+        # bands settings
+        self.connect_param(self.sld_bands_bin_width, self.lbl_bands_bin_width, self.bands_mode.set_bin_width, fmt="{}   ")
+        self.connect_param(self.sld_bands_spacing, self.lbl_bands_spacing, self.bands_mode.set_spacing, fmt="{}   ")
+        self.connect_param(self.sld_bands_a_max, self.lbl_bands_a_max, self.bands_mode.set_a_max, fmt="{} dB")
+        self.connect_param(self.sld_bands_a_min, self.lbl_bands_a_min, self.bands_mode.set_a_min, fmt="{} dB")
+        self.connect_param(self.sld_bands_f_max, self.lbl_bands_f_max, self.bands_mode.set_f_max, fmt="{} Hz")
+        self.connect_param(self.sld_bands_f_min, self.lbl_bands_f_min, self.bands_mode.set_f_min, fmt="{} Hz")
+        
+        
+    def connect_param(self, slider: QSlider, label: QLabel, setter: callable, fmt: str ="{}"):
+        slider.sliderMoved.connect(lambda val: self.param_changed(slider, val, label, setter, fmt))
+        slider.valueChanged.connect(lambda val: self.param_changed(slider, val, label, setter, fmt))
+        self.param_changed(slider, slider.value(), label, setter, fmt)
+        
+    def param_changed(self, slider: QSlider, val: any, label: QLabel, setter: callable, fmt: str):
+        minimum = slider.minimum()
+        step = slider.singleStep()
+
+        val = round((val - minimum)/step) * step + minimum
+        slider.setValue(val)
+        label.setText(fmt.format(val))
+        setter(val)
+        
     def load_icons(self):
         assets = (Path(__file__).parent / '../../assets').resolve()
         
@@ -60,12 +86,15 @@ class TabMusic(QWidget, Ui_TabMusic):
 
         if mode == 'Timeline':
             self.btn_mode_timeline.setChecked(True)
+            self.mode_settings.setCurrentIndex(0)
         
         elif mode == 'Timeline-Dual':
             self.btn_mode_timeline_dual.setChecked(True)
+            self.mode_settings.setCurrentIndex(1)
 
         elif mode == 'Freq-Bands':
             self.btn_mode_bands.setChecked(True)
+            self.mode_settings.setCurrentIndex(2)
 
         self.selected_animation = mode
 
