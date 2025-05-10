@@ -58,6 +58,11 @@ class TabGame(QWidget, Ui_TabGame):
         self.btn_pong.setIcon(icon)
         self.btn_pong.setProperty('class', 'mode-btn')
 
+        # pacman icon
+        icon = QIcon(str(assets / 'pacman-icon.png'))
+        self.btn_pacman.setIcon(icon)
+        self.btn_pacman.setProperty('class', 'mode-btn')
+
     def select_game(self, mode: Literal['Snake', 'Pong']):
         self.btn_pong.setChecked(False)
         self.btn_snake.setChecked(False)
@@ -84,15 +89,19 @@ class TabGame(QWidget, Ui_TabGame):
         match state:
             case JoystickState.Left:
                 self.snake_mode.change_direction(Direction.LEFT)
+                self.pacman_mode.set_player_dir(Direction.LEFT)
 
             case JoystickState.Right:
                 self.snake_mode.change_direction(Direction.RIGHT)
+                self.pacman_mode.set_player_dir(Direction.RIGHT)
 
             case JoystickState.Top:
                 self.snake_mode.change_direction(Direction.UP)
+                self.pacman_mode.set_player_dir(Direction.UP)
 
             case JoystickState.Bottom:
                 self.snake_mode.change_direction(Direction.DOWN)
+                self.pacman_mode.set_player_dir(Direction.DOWN)
 
     def handle_button(self, btn: int):
         if self.selected_game == 'Snake':
