@@ -2,7 +2,7 @@ from rendering.RenderMode import RenderMode
 from typing import Literal
 import numpy as np
 
-type ColorChannel = Literal['red', 'green', 'blue']
+ColorChannel = Literal['red', 'green', 'blue']
 
 class TestGammaMode(RenderMode):
     def __init__(self, width, height):
