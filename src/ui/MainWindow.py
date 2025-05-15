@@ -14,7 +14,6 @@ from ui.Settings import TabSettings
 from ui.Image import TabImage
 from ui.Music import TabMusic
 from ui.Animation import TabAnimation
-from ui.Text import TabText
 from ui.Preview import TabPreview
 from ui.Game import TabGame
 from ui.Input import InputDevice
@@ -32,7 +31,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # window attributes
         self.setWindowTitle("Matrix-App")
-        self.setMinimumSize(100,100)
+        self.setMinimumSize(800,480)
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
@@ -73,7 +72,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tab_animation  = TabAnimation(self.renderer, self.matrix_width, self.matrix_height)
         self.tab_game       = TabGame(self.input_dev, self.renderer, self.matrix_width, self.matrix_height)
         self.tab_music      = TabMusic(self.renderer, self.matrix_width, self.matrix_height)
-        self.tab_text       = TabText()
         self.tab_image      = TabImage(self.renderer, self.matrix_width, self.matrix_height)
         self.tab_preview    = TabPreview(self.matrix_width, self.matrix_height)
 
@@ -81,7 +79,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loadTab('Animation', self.tab_animation)
         self.loadTab('Game', self.tab_game)
         self.loadTab('Music', self.tab_music)
-        self.loadTab('Text', self.tab_text)
         self.loadTab('Image', self.tab_image)
         self.loadTab('Preview', self.tab_preview)
         self.tab_bar.currentChanged.connect(self.stack.setCurrentIndex)
@@ -98,7 +95,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.fps_timer.start(1000)
 
         # show main window
-        self.showMaximized()
+        # self.showMaximized()
+        self.show()
 
     def loadTab(self, name: str, content: QWidget) -> None:
         self.tab_bar.addTab(name)

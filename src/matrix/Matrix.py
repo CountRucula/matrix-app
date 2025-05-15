@@ -12,12 +12,19 @@ class Matrix(Device):
 
         self.fw_version = ""
 
-        self.gamma_red = 1.0
-        self.gamma_green = 1.0
-        self.gamma_blue = 1.0
+        self.set_gamma({})
+        self.set_color_scale({})
 
         self.format = MatrixFormat()
         self.link = SerialLink()
+        
+    def set_gamma(self, gamma: dict):
+        self.gamma_red = gamma.get('red', 2.2)
+        self.gamma_green = gamma.get('green', 2.2)
+        self.gamma_blue = gamma.get('blue', 2.2)
+        
+    def set_color_scale(self, scale: dict):
+        self.scale = np.array((scale.get('red', 1.0), scale.get('green', 1.0), scale.get('blue', 1.0)), float)
     
     def list_matrices(self, devices: list[tuple[str, DeviceType]] = None) -> list[str]:
         if devices is None:
@@ -79,7 +86,7 @@ class Matrix(Device):
             data (np.ndarray): led data with shape (height, width, 3)
         """
         if self.link.connected:
-            data = self.apply_gamma_correction(data)
+            data = self.apply_gamma_correction(data) * self.scale
             data[::2] = data[::2, ::-1] # flip every 2nd row
             data[:] = data[::-1] # flip y
 

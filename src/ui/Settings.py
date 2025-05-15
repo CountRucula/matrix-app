@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QSlider, QLabel
 from PySide6.QtGui import QStandardItem, QIcon
 from PySide6.QtCore import QSize, Qt
 
@@ -10,7 +10,7 @@ import json
 from matrix.Matrix import Matrix
 from ui.Input import InputDevice
 from rendering.RenderManager import RenderManager
-from rendering.TestMode import TestGammaMode, ColorChannel
+from rendering.TestMode import TestGammaMode, ColorChannel, TestScaleMode
 
 # genrated ui
 from qt.generated.UI_settings import Ui_TabSettings
@@ -32,6 +32,7 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.lbl_matrix_conn.setProperty('class', 'title')
         self.lbl_gamma_corr.setProperty('class', 'title')
         self.lbl_calibration.setProperty('class', 'title')
+        self.lbl_color_scale.setProperty('class', 'title')
 
         # icons
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'
@@ -86,6 +87,21 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.gamma_mode.set_color(self.gamma_channel)
         self.gamma_mode.set_gamma(self.gamma[self.gamma_channel])
 
+        # color scaling
+        self.scale_mode = TestScaleMode(width, height)
+        self.scale_mode_name = 'Color-Scale'
+        self.renderer.AddMode(self.scale_mode_name, self.scale_mode)
+
+        self.sld_scale_red.setValue(self.color_scale['red']*100)
+        self.sld_scale_green.setValue(self.color_scale['green']*100)
+        self.sld_scale_blue.setValue(self.color_scale['blue']*100)
+
+        self.connect_param(self.sld_scale_red, self.lbl_scale_red, lambda v: self.scaleChanged('red', v), transform=lambda v: v/100)
+        self.connect_param(self.sld_scale_green, self.lbl_scale_green, lambda v: self.scaleChanged('green', v), transform=lambda v: v/100)
+        self.connect_param(self.sld_scale_blue, self.lbl_scale_blue, lambda v: self.scaleChanged('blue', v), transform=lambda v: v/100)
+        
+        self.btn_test_scale.clicked.connect(self.displayScaleTest)
+
     def calibrate_poti(self, poti: int, what: Literal['min', 'max']):
         raw = self.input.poti_states[poti]['raw']
 
@@ -102,24 +118,42 @@ class TabSettings(QWidget, Ui_TabSettings):
 
         self.renderer.SelectMode(self.gamma_mode_name)
         self.renderer.PreviewMode(self.gamma_mode_name)
+        
+    def displayScaleTest(self):
+        self.renderer.SelectMode(self.scale_mode_name)
+        self.renderer.PreviewMode(self.scale_mode_name)
+    
+    def scaleChanged(self, channel: ColorChannel, scale):
+        self.color_scale[channel] = scale
+        self.scale_mode.set_scale(self.color_scale)
+        self.save_settings()
 
     def gammaChanged(self, channel: ColorChannel):
-        if channel == 'red':
-            self.gamma[channel] = self.sb_gamma_red.value()
-            self.matrix.gamma_red = self.gamma[channel]
-    
-        elif channel == 'green':
-            self.gamma[channel] = self.sb_gamma_green.value()
-            self.matrix.gamma_green = self.gamma[channel]
-
-        elif channel == 'blue':
-            self.gamma[channel] = self.sb_gamma_blue.value()
-            self.matrix.gamma_blue = self.gamma[channel]
+        self.gamma[channel] = self.sb_gamma_blue.value()
+        self.matrix.set_gamma(self.gamma)
 
         if channel == self.gamma_channel:
             self.gamma_mode.set_gamma(self.gamma[channel])
 
         self.save_settings()
+
+    def connect_param(self, slider: QSlider, label: QLabel, setter: callable, fmt: str ="{}", transform: callable = None):
+        slider.sliderMoved.connect(lambda val: self.param_changed(slider, val, label, setter, fmt, transform))
+        slider.valueChanged.connect(lambda val: self.param_changed(slider, val, label, setter, fmt, transform))
+        self.param_changed(slider, slider.value(), label, setter, fmt, transform)
+        
+    def param_changed(self, slider: QSlider, val: any, label: QLabel, setter: callable, fmt: str, transform: callable = None):
+        minimum = slider.minimum()
+        step = slider.singleStep()
+
+        val = round((val - minimum)/step) * step + minimum
+        slider.setValue(val)
+        
+        if transform is not None:
+            val = transform(val)
+
+        label.setText(fmt.format(val))
+        setter(val)
 
     def load_ports(self):
         devices = self.matrix.list_devices()
@@ -193,22 +227,25 @@ class TabSettings(QWidget, Ui_TabSettings):
             'blue':     2.2
         }
 
-        self.save_settings()
+        self.color_scale = {
+            'red':      1.0,
+            'green':    1.0,
+            'blue':     1.0
+        }
 
     def load_settings(self):
+        self.load_default_settings()
+
         path = Path(__file__).parent / '../../settings.json'
         
         if path.exists():
             with open(path) as json_file:
-                json_data = json.load(json_file)
+                json_data: dict = json.load(json_file)
                 print(json_data)
 
-                self.gamma = json_data['gamma']
-                self.poti_calib = json_data['poti_calib']
-
-        else:
-            self.load_default_settings()
-        
+                self.gamma          = json_data.get('gamma', self.gamma)
+                self.poti_calib     = json_data.get('poti_calib', self.poti_calib) 
+                self.color_scale    = json_data.get('color_scale', self.color_scale)
 
     def save_settings(self):
         path = Path(__file__).parent / '../../settings.json'
@@ -216,7 +253,8 @@ class TabSettings(QWidget, Ui_TabSettings):
         with open(path, 'w+t') as json_file:
             json_data = {
                 'gamma': self.gamma,
-                'poti_calib': self.poti_calib
+                'poti_calib': self.poti_calib,
+                'color_scale': self.color_scale
             }
 
             json.dump(json_data, json_file, indent=4)

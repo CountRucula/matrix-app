@@ -27,7 +27,7 @@
         {
             "label": "generate python from ui files",
             "type": "shell",
-            "command": "\"python tools/generate-pacman-ui.py\"",
+            "command": "\"python tools/generate-python-ui.py\"",
             "problemMatcher": [],
             "isBackground": true,
         },

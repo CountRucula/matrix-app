@@ -5,7 +5,7 @@ import time
 from controller.Controller import Controller, ButtonState, JoystickState, Event
 import logging
 
-#logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 class InputDevice(QObject):
     btn_pressed = Signal(int)

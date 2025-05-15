@@ -64,10 +64,10 @@ class SerialLink:
         logging.info(f"connected to {dev}")
 
     def Disconnect(self) -> None:
-        if self.serial is None:
+        if self.serial is None or self.serial.closed:
             logging.info("already disconnected")
             return
-
+        
         self.Flush()
         self.Stop()
 
@@ -109,8 +109,9 @@ class SerialLink:
     def ClearSendQueue(self):
         self.send_queue = Queue()
 
-    def Flush(self):
-        while not self.send_queue.empty():
+    def Flush(self, timeout=0.5):
+        t = time.time()
+        while not self.send_queue.empty() and not (time.time() - t) > timeout:
             time.sleep(0.05)
 
     def GetFrame(self, timeout: float = 0.01):

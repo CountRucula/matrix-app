@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QSlider, QLabel
 from PySide6.QtGui import QStandardItem, QIcon
 import PySide6.QtCore as QtCore
 
@@ -40,7 +40,51 @@ class TabAnimation(QWidget, Ui_TabAnimation):
 
         self.btn_preview.clicked.connect(self.preview_animation)
         self.btn_display.clicked.connect(self.start_animation)
+        
+        # mode settings
+        # sine mode settings
+        self.connect_param(self.sld_sine_f, self.lbl_sine_f, self.sine_mode.set_f, transform=lambda v: v/10)
+        self.connect_param(self.sld_sine_a, self.lbl_sine_a, self.sine_mode.set_a)
+        self.connect_param(self.sld_sine_offset, self.lbl_sine_offset, self.sine_mode.set_offset)
+        self.connect_param(self.sld_sine_phase, self.lbl_sine_phase, self.sine_mode.set_phase)
+        self.connect_param(self.sld_sine_waves, self.lbl_sine_waves, self.sine_mode.set_waves)
 
+        # rectangle mode settings
+        self.connect_param(self.sld_rect_f, self.lbl_rect_f, self.rect_mode.set_f, transform=lambda v: v/10)
+        self.connect_param(self.sld_rect_a, self.lbl_rect_a, self.rect_mode.set_a)
+        self.connect_param(self.sld_rect_offset, self.lbl_rect_offset, self.rect_mode.set_offset)
+        self.connect_param(self.sld_rect_phase, self.lbl_rect_phase, self.rect_mode.set_phase)
+        self.connect_param(self.sld_rect_waves, self.lbl_rect_waves, self.rect_mode.set_waves)
+        self.connect_param(self.sld_rect_duty, self.lbl_rect_duty, self.rect_mode.set_duty)
+
+        # sawtooth mode settings
+        self.connect_param(self.sld_saw_f, self.lbl_saw_f, self.saw_mode.set_f, transform=lambda v: v/10)
+        self.connect_param(self.sld_saw_a, self.lbl_saw_a, self.saw_mode.set_a)
+        self.connect_param(self.sld_saw_offset, self.lbl_saw_offset, self.saw_mode.set_offset)
+        self.connect_param(self.sld_saw_phase, self.lbl_saw_phase, self.saw_mode.set_phase)
+        self.connect_param(self.sld_saw_waves, self.lbl_saw_waves, self.saw_mode.set_waves)
+        self.connect_param(self.sld_saw_symmetry, self.lbl_saw_symmetry, self.saw_mode.set_symmetry)
+        
+        # Default Selection
+        self.select_animation('Sine')
+
+    def connect_param(self, slider: QSlider, label: QLabel, setter: callable, fmt: str ="{}", transform: callable = None):
+        slider.sliderMoved.connect(lambda val: self.param_changed(slider, val, label, setter, fmt, transform))
+        slider.valueChanged.connect(lambda val: self.param_changed(slider, val, label, setter, fmt, transform))
+        self.param_changed(slider, slider.value(), label, setter, fmt, transform)
+        
+    def param_changed(self, slider: QSlider, val: any, label: QLabel, setter: callable, fmt: str, transform: callable = None):
+        minimum = slider.minimum()
+        step = slider.singleStep()
+
+        val = round((val - minimum)/step) * step + minimum
+        slider.setValue(val)
+        
+        if transform is not None:
+            val = transform(val)
+
+        label.setText(fmt.format(val))
+        setter(val)
 
     def load_icons(self):
         assets = (Path(__file__).parent / '../../assets').resolve()
@@ -73,15 +117,19 @@ class TabAnimation(QWidget, Ui_TabAnimation):
 
         if mode == 'Sine':
             self.btn_mode_sine.setChecked(True)
+            self.mode_settings.setCurrentIndex(0)
         
         elif mode == 'Rectangle':
             self.btn_mode_rect.setChecked(True)
+            self.mode_settings.setCurrentIndex(1)
 
         elif mode == 'Sawtooth':
             self.btn_mode_sawtooth.setChecked(True)
+            self.mode_settings.setCurrentIndex(2)
 
         elif mode == 'Rainbow':
             self.btn_mode_rainbow.setChecked(True)
+            self.mode_settings.setCurrentIndex(3)
 
         self.selected_animation = mode
 

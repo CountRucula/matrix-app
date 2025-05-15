@@ -23,12 +23,69 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 480)
         MainWindow.setBaseSize(QSize(800, 480))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(-1, 10, -1, -1)
+        self.label_1 = QLabel(self.centralwidget)
+        self.label_1.setObjectName(u"label_1")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_1.sizePolicy().hasHeightForWidth())
+        self.label_1.setSizePolicy(sizePolicy)
+        self.label_1.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout.addWidget(self.label_1)
+
+        self.lbl_matrix_status = QLabel(self.centralwidget)
+        self.lbl_matrix_status.setObjectName(u"lbl_matrix_status")
+        sizePolicy.setHeightForWidth(self.lbl_matrix_status.sizePolicy().hasHeightForWidth())
+        self.lbl_matrix_status.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout.addWidget(self.lbl_matrix_status)
+
+        self.line_2 = QFrame(self.centralwidget)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShape(QFrame.Shape.VLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout.addWidget(self.line_2)
+
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy)
+        self.label_5.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout.addWidget(self.label_5)
+
+        self.lbl_controller_status = QLabel(self.centralwidget)
+        self.lbl_controller_status.setObjectName(u"lbl_controller_status")
+        sizePolicy.setHeightForWidth(self.lbl_controller_status.sizePolicy().hasHeightForWidth())
+        self.lbl_controller_status.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout.addWidget(self.lbl_controller_status)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
+
+        self.line_6 = QFrame(self.centralwidget)
+        self.line_6.setObjectName(u"line_6")
+        self.line_6.setFrameShape(QFrame.Shape.HLine)
+        self.line_6.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout.addWidget(self.line_6)
+
+        self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
         self.title_layout = QHBoxLayout()
         self.title_layout.setObjectName(u"title_layout")
         self.title_layout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
@@ -60,52 +117,12 @@ class Ui_MainWindow(object):
 
         self.footer_layout = QHBoxLayout()
         self.footer_layout.setObjectName(u"footer_layout")
-        self.label_1 = QLabel(self.centralwidget)
-        self.label_1.setObjectName(u"label_1")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_1.sizePolicy().hasHeightForWidth())
-        self.label_1.setSizePolicy(sizePolicy)
-        self.label_1.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.footer_layout.addWidget(self.label_1)
-
-        self.lbl_matrix_status = QLabel(self.centralwidget)
-        self.lbl_matrix_status.setObjectName(u"lbl_matrix_status")
-        sizePolicy.setHeightForWidth(self.lbl_matrix_status.sizePolicy().hasHeightForWidth())
-        self.lbl_matrix_status.setSizePolicy(sizePolicy)
-
-        self.footer_layout.addWidget(self.lbl_matrix_status)
-
         self.line_5 = QFrame(self.centralwidget)
         self.line_5.setObjectName(u"line_5")
         self.line_5.setFrameShape(QFrame.Shape.VLine)
         self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.footer_layout.addWidget(self.line_5)
-
-        self.label_5 = QLabel(self.centralwidget)
-        self.label_5.setObjectName(u"label_5")
-        sizePolicy.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy)
-        self.label_5.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.footer_layout.addWidget(self.label_5)
-
-        self.lbl_controller_status = QLabel(self.centralwidget)
-        self.lbl_controller_status.setObjectName(u"lbl_controller_status")
-        sizePolicy.setHeightForWidth(self.lbl_controller_status.sizePolicy().hasHeightForWidth())
-        self.lbl_controller_status.setSizePolicy(sizePolicy)
-
-        self.footer_layout.addWidget(self.lbl_controller_status)
-
-        self.line_2 = QFrame(self.centralwidget)
-        self.line_2.setObjectName(u"line_2")
-        self.line_2.setFrameShape(QFrame.Shape.VLine)
-        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.footer_layout.addWidget(self.line_2)
 
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
@@ -172,11 +189,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_1.setText(QCoreApplication.translate("MainWindow", u"Matrix Status:", None))
         self.lbl_matrix_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
         self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
+        self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
         self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))

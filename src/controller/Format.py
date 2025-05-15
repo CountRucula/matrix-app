@@ -13,6 +13,7 @@ class ControllerCommands(enum.Enum):
 
     GetEvents           = 0x20
     CalibratePoti       = 0x21
+    SetLed              = 0x22
 
 class ButtonState(enum.Enum):
     Pressed  = 0x01
@@ -61,6 +62,9 @@ class ControllerFormat(SerialFormat):
                 "stick_id" / Byte,
             ),
             self.commands.GetEvents: Struct(),
+            self.commands.SetLed: Struct(
+                "led_id" / Byte, 
+            )
         })
 
         self.response_table.update({

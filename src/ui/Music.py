@@ -25,14 +25,14 @@ class TabMusic(QWidget, Ui_TabMusic):
 
         self.renderer.AddMode('Timeline', self.timeline_mode)
         self.renderer.AddMode('Timeline-Dual', self.timeline_mode)
-        self.renderer.AddMode('Freq-Bands', self.bands_mode)
+        self.renderer.AddMode('Spectrum', self.bands_mode)
         
         QScroller.grabGesture(self.scrollArea.viewport(), QScroller.LeftMouseButtonGesture)
 
         # register callbacks
         self.btn_mode_timeline.clicked.connect(lambda: self.select_animation('Timeline'))
         self.btn_mode_timeline_dual.clicked.connect(lambda: self.select_animation('Timeline-Dual'))
-        self.btn_mode_bands.clicked.connect(lambda: self.select_animation('Freq-Bands'))
+        self.btn_mode_bands.clicked.connect(lambda: self.select_animation('Spectrum'))
 
         self.btn_display.clicked.connect(self.start_animation)
         self.btn_preview.clicked.connect(self.preview_animation)
