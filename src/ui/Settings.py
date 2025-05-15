@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget, QSlider, QLabel
+from PySide6.QtWidgets import QWidget, QSlider, QLabel,QScroller
 from PySide6.QtGui import QStandardItem, QIcon
 from PySide6.QtCore import QSize, Qt
 
@@ -33,6 +33,8 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.lbl_gamma_corr.setProperty('class', 'title')
         self.lbl_calibration.setProperty('class', 'title')
         self.lbl_color_scale.setProperty('class', 'title')
+
+        QScroller.grabGesture(self.scrollArea.viewport(), QScroller.TouchGesture)
 
         # icons
         icon_path = Path(__file__).parent / '../../assets/rotate-left-solid.svg'

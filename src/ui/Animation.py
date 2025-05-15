@@ -1,5 +1,5 @@
 # QT-Lib
-from PySide6.QtWidgets import QWidget, QSlider, QLabel
+from PySide6.QtWidgets import QWidget, QSlider, QLabel, QScroller
 from PySide6.QtGui import QStandardItem, QIcon
 import PySide6.QtCore as QtCore
 
@@ -31,6 +31,8 @@ class TabAnimation(QWidget, Ui_TabAnimation):
         self.renderer.AddMode('Rain', self.rain_mode)
         self.renderer.AddMode('Rainbow', self.rainbow_mode)
         self.load_icons()
+
+        QScroller.grabGesture(self.scrollArea.viewport(), QScroller.TouchGesture)
 
         # register callbacks
         self.btn_mode_sine.clicked.connect(lambda: self.select_animation('Sine'))
