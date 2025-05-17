@@ -24,6 +24,22 @@ then
 
         # Pull the changes
         git pull origin $branch
+        
+        # check if virtual enviroment exists, if not => create one
+        venv=.venv
+        if ! [-d $venv/bin]
+        then
+            echo "Virtual enviroment does not exist."
+            python3 -m virtualenv $venv
+        fi
+        
+        # activate venv
+        echo "Activating virtual enviroment"
+        source $venv/bin/activate
+
+        # install modules
+        echo "Installing python modules"
+        pip install -r requirements.txt
 
         # Restart the script
         echo "Restarting the script..."
@@ -38,5 +54,6 @@ fi
 
 echo "Starting the application..."
 sleep 2
+
 export DISPLAY=:0
-venv/bin/python3 main.py
+.venv/bin/python3 src/main.py
