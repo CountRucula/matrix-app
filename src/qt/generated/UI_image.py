@@ -26,6 +26,10 @@ class Ui_TabImage(object):
         TabImage.resize(490, 343)
         self.verticalLayout = QVBoxLayout(TabImage)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.btn_open_file_dialog = QPushButton(TabImage)

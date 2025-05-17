@@ -54,7 +54,7 @@ class Ui_sidebar(object):
 
         self.gridLayout.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.gridLayout.addItem(self.verticalSpacer, 4, 0, 1, 1)
 
@@ -69,7 +69,7 @@ class Ui_sidebar(object):
 
         self.gridLayout.addWidget(self.tabs, 3, 0, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.gridLayout.addItem(self.verticalSpacer_2, 0, 0, 1, 1)
 
