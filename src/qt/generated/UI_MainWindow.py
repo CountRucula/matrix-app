@@ -82,6 +82,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.line_6)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout.addItem(self.verticalSpacer_2)
+
         self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -90,15 +94,15 @@ class Ui_MainWindow(object):
         self.title_layout.setObjectName(u"title_layout")
         self.title_layout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.title_layout.setContentsMargins(-1, 0, -1, 0)
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.title_layout.addItem(self.horizontalSpacer)
-
         self.btn_close = QToolButton(self.centralwidget)
         self.btn_close.setObjectName(u"btn_close")
         self.btn_close.setAutoFillBackground(False)
 
         self.title_layout.addWidget(self.btn_close)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.title_layout.addItem(self.horizontalSpacer)
 
 
         self.verticalLayout.addLayout(self.title_layout)
@@ -117,13 +121,6 @@ class Ui_MainWindow(object):
 
         self.footer_layout = QHBoxLayout()
         self.footer_layout.setObjectName(u"footer_layout")
-        self.line_5 = QFrame(self.centralwidget)
-        self.line_5.setObjectName(u"line_5")
-        self.line_5.setFrameShape(QFrame.Shape.VLine)
-        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.footer_layout.addWidget(self.line_5)
-
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
         sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())

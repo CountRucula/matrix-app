@@ -95,8 +95,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.fps_timer.start(1000)
 
         # show main window
-        # self.showMaximized()
-        self.show()
+        self.showFullScreen()
 
     def loadTab(self, name: str, content: QWidget) -> None:
         self.tab_bar.addTab(name)
