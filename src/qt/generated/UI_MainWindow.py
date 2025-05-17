@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QLayout, QMainWindow, QSizePolicy, QSpacerItem,
-    QStackedWidget, QToolButton, QVBoxLayout, QWidget)
+    QMainWindow, QSizePolicy, QSpacerItem, QStackedWidget,
+    QToolButton, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -82,35 +82,24 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.line_6)
 
+        self.btn_sidebar = QToolButton(self.centralwidget)
+        self.btn_sidebar.setObjectName(u"btn_sidebar")
+        self.btn_sidebar.setMinimumSize(QSize(40, 40))
+        self.btn_sidebar.setAutoFillBackground(False)
+
+        self.verticalLayout.addWidget(self.btn_sidebar)
+
         self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
-        self.title_layout = QHBoxLayout()
-        self.title_layout.setObjectName(u"title_layout")
-        self.title_layout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.title_layout.setContentsMargins(-1, 0, -1, 0)
-        self.btn_sidebar = QToolButton(self.centralwidget)
-        self.btn_sidebar.setObjectName(u"btn_sidebar")
-        self.btn_sidebar.setAutoFillBackground(False)
-
-        self.title_layout.addWidget(self.btn_sidebar)
-
-        self.btn_close = QToolButton(self.centralwidget)
-        self.btn_close.setObjectName(u"btn_close")
-        self.btn_close.setAutoFillBackground(False)
-
-        self.title_layout.addWidget(self.btn_close)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.title_layout.addItem(self.horizontalSpacer)
-
-
-        self.verticalLayout.addLayout(self.title_layout)
-
         self.stack = QStackedWidget(self.centralwidget)
         self.stack.setObjectName(u"stack")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(1)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.stack.sizePolicy().hasHeightForWidth())
+        self.stack.setSizePolicy(sizePolicy1)
 
         self.verticalLayout.addWidget(self.stack)
 
@@ -193,7 +182,6 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
         self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.btn_sidebar.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
         self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))

@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 
 # QT-Lib
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar, QLabel, QListWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar, QLabel, QListWidget, QToolButton
 from PySide6.QtGui import QIcon, QKeyEvent
 from PySide6.QtCore import Qt, QPoint, QObject, QSize, QTimer, QPropertyAnimation, QRect
 
@@ -59,24 +59,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         # create sidebar
         self.sidebar = Sidebar(parent=self)
-
-        # close button
-        icon_path = Path(__file__).parent / "../../assets/xmark.svg"
-        icon = QIcon(str(icon_path))
-        self.btn_close.setIcon(icon)
-        self.btn_close.setIconSize(QSize(20,20))
-        self.btn_close.clicked.connect(self.close)
         self.sidebar.btn_close.clicked.connect(self.close)
-        self.btn_close.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
-        # create tab bar
-        self.tab_bar = QTabBar()
-        self.tab_bar.setFocusPolicy(Qt.NoFocus)
-        self.title_layout.insertWidget(1, self.tab_bar)
-        
-        # self.sidebar_tabs = QListWidget()
-        # self.sidebar.layout().insertWidget(0, self.sidebar_tabs)
+        icon_path = Path(__file__).parent / "../../assets/bars.svg"
+        icon = QIcon(str(icon_path))
+        self.btn_sidebar.setIcon(icon)
+        self.btn_sidebar.setIconSize(QSize(40,40))
         self.btn_sidebar.clicked.connect(self.toggle_sidebar)
+        self.btn_sidebar.setFocusPolicy(Qt.NoFocus)
 
         # add tab content 
         self.tab_settings   = TabSettings(self, self.matrix, self.input_dev, self.renderer, self.matrix_width, self.matrix_height)
@@ -117,7 +107,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loadTab(self, name: str, content: QWidget) -> None:
         self.sidebar.tabs.addItem(name)
-        # self.tab_bar.addTab(name)
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.addWidget(content)

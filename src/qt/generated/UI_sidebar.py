@@ -85,7 +85,7 @@ class Ui_sidebar(object):
 
         self.gridLayout.addWidget(self.btn_toggle, 0, 1, 5, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.gridLayout.addItem(self.verticalSpacer_3, 2, 0, 1, 1)
 
