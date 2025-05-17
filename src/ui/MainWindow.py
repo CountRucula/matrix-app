@@ -65,7 +65,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # create tab bar
         self.tab_bar = QTabBar()
         self.tab_bar.setFocusPolicy(Qt.NoFocus)
-        self.title_layout.insertWidget(0, self.tab_bar)
+        self.title_layout.insertWidget(1, self.tab_bar)
 
         # add tab content 
         self.tab_settings   = TabSettings(self, self.matrix, self.input_dev, self.renderer, self.matrix_width, self.matrix_height)

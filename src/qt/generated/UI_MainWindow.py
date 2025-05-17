@@ -82,10 +82,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.line_6)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.verticalLayout.addItem(self.verticalSpacer_2)
-
         self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.verticalLayout.addItem(self.verticalSpacer)
