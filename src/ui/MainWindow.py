@@ -2,9 +2,9 @@ from pathlib import Path
 import numpy as np
 
 # QT-Lib
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QTabBar, QLabel, QListWidget
 from PySide6.QtGui import QIcon, QKeyEvent
-from PySide6.QtCore import Qt, QPoint, QObject, QSize, QTimer
+from PySide6.QtCore import Qt, QPoint, QObject, QSize, QTimer, QPropertyAnimation, QRect
 
 # genrated ui
 from qt.generated.UI_MainWindow import Ui_MainWindow
@@ -18,7 +18,10 @@ from ui.Preview import TabPreview
 from ui.Game import TabGame
 from ui.Input import InputDevice
 
+from ui.Sidebar import Sidebar
+
 from rendering.RenderManager import RenderManager
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, matrix, controller):
@@ -53,6 +56,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         icon_path = Path(__file__).parent / "../../assets/top-hat.svg"
         icon = QIcon(str(icon_path))
         self.setWindowIcon(icon)
+        
+        # create sidebar
+        self.sidebar = Sidebar(parent=self)
 
         # close button
         icon_path = Path(__file__).parent / "../../assets/xmark.svg"
@@ -60,12 +66,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btn_close.setIcon(icon)
         self.btn_close.setIconSize(QSize(20,20))
         self.btn_close.clicked.connect(self.close)
+        self.sidebar.btn_close.clicked.connect(self.close)
         self.btn_close.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         # create tab bar
         self.tab_bar = QTabBar()
         self.tab_bar.setFocusPolicy(Qt.NoFocus)
         self.title_layout.insertWidget(1, self.tab_bar)
+        
+        # self.sidebar_tabs = QListWidget()
+        # self.sidebar.layout().insertWidget(0, self.sidebar_tabs)
+        self.btn_sidebar.clicked.connect(self.toggle_sidebar)
 
         # add tab content 
         self.tab_settings   = TabSettings(self, self.matrix, self.input_dev, self.renderer, self.matrix_width, self.matrix_height)
@@ -81,7 +92,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loadTab('Music', self.tab_music)
         self.loadTab('Image', self.tab_image)
         self.loadTab('Preview', self.tab_preview)
-        self.tab_bar.currentChanged.connect(self.stack.setCurrentIndex)
+        # self.sidebar_tabs.currentItemChanged.connect(lambda *args: self.stack.setCurrentIndex(self.listWidget.currentRow()))
+        self.sidebar.tabs.currentRowChanged.connect(self.stack.setCurrentIndex)
 
         # add preview matrix & hardware matrix to renderer
         self.renderer.SetVirtualMatrix(self.tab_preview.preview_matrix)
@@ -96,9 +108,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # show main window
         self.showFullScreen()
+        
+    def toggle_sidebar(self):
+        if self.sidebar.isVisible():
+            self.sidebar.hide_with_animation()
+        else:
+            self.sidebar.show_with_animation(self.stack.currentIndex())
 
     def loadTab(self, name: str, content: QWidget) -> None:
-        self.tab_bar.addTab(name)
+        self.sidebar.tabs.addItem(name)
+        # self.tab_bar.addTab(name)
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.addWidget(content)

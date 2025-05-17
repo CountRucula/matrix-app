@@ -90,6 +90,12 @@ class Ui_MainWindow(object):
         self.title_layout.setObjectName(u"title_layout")
         self.title_layout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.title_layout.setContentsMargins(-1, 0, -1, 0)
+        self.btn_sidebar = QToolButton(self.centralwidget)
+        self.btn_sidebar.setObjectName(u"btn_sidebar")
+        self.btn_sidebar.setAutoFillBackground(False)
+
+        self.title_layout.addWidget(self.btn_sidebar)
+
         self.btn_close = QToolButton(self.centralwidget)
         self.btn_close.setObjectName(u"btn_close")
         self.btn_close.setAutoFillBackground(False)
@@ -186,6 +192,7 @@ class Ui_MainWindow(object):
         self.lbl_matrix_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
         self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
+        self.btn_sidebar.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
         self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))

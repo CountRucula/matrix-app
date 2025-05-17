@@ -21,3 +21,15 @@ QLabel#img_path {{
     border: 0px;
     border-bottom: 12px solid {QTMATERIAL_PRIMARYCOLOR};
 }}
+
+.transparent-bg{{
+    background-color: rgba(0, 0, 0, 127);
+}}
+
+QPushButton.transparent-bg:hover{{
+    background-color: rgba(0, 0, 0, 0);
+}}
+
+QPushButton.transparent-bg:focus{{
+    background-color: rgba(0, 0, 0, 0);
+}}
