@@ -46,13 +46,14 @@ class SnakeMode(RenderMode):
         self.apple_stem_color   = ( 86,  59,  12)
 
         self.start_mode()
+        self.game_first_start = True
 
         self.f = 5
 
     def start_mode(self):
         self.clear()
         self.game_running = False
-        self.game_over = True
+        self.game_over = False
 
         self.dir = Direction.RIGHT
         self.new_dir = Direction.RIGHT
@@ -65,6 +66,8 @@ class SnakeMode(RenderMode):
         self.snake = deque(self.start_coords)
         self.snake_growing = 0
         self.snake_body = set()
+        
+        self.score = 0
 
         self.draw_snake()
 
@@ -73,10 +76,11 @@ class SnakeMode(RenderMode):
             self.game_running = False
 
         else:
-            if self.game_over:
+            if self.game_over or self.game_first_start:
                 self.start_mode()
                 self.place_apple()
                 self.game_over = False
+                self.game_first_start = False
 
             self.start_time = time.time()
             self.game_running = True
@@ -167,6 +171,7 @@ class SnakeMode(RenderMode):
             # grow
             if nose in self.apple_body:
                 self.place_apple()
+                self.score += 200
                 self.snake_growing = 3
             
             # still growing
@@ -217,6 +222,7 @@ class SnakeMode(RenderMode):
     def game_end(self):
         self.game_over = True
         self.game_running = False
+        
         print("game over")
 
     def draw_snake(self):
@@ -307,6 +313,11 @@ class SnakeMode(RenderMode):
                 self.clear()
                 self.draw_apple()
                 self.draw_snake()
+                
+        elif self.game_over:
+            self.framebuffer.fill(0) 
+            self.draw_text("You Died", (0,2), fg=(215, 0, 0), hcenter=True)
+            self.draw_text(self.score, (0,11), fg=(215, 0, 0), hcenter=True)
 
         return self.framebuffer
 
@@ -334,6 +345,7 @@ class PongMode(RenderMode):
 
     def start_mode(self):
         self.game_running = False
+        self.game_is_over = False
         self.ball = None
         self.ball_speed = 0.0
 
@@ -492,6 +504,7 @@ class PongMode(RenderMode):
         self.start_mode()
         self.round_start()
 
+        self.game_is_over = False
         self.game_running = True
 
     def round_start(self):
@@ -527,6 +540,7 @@ class PongMode(RenderMode):
     def game_over(self):
         self.ball_speed = 0
         self.game_running = False
+        self.game_is_over = True
         print("game-over")
 
     def move_player(self, pos: int, speed: float, delta_t: float):
@@ -600,9 +614,17 @@ class PongMode(RenderMode):
         elapsed = time.time() - self.start_time
         self.start_time = time.time()
 
-        # clear buffer
-        self.clear()
+        if self.game_is_over:
+            self.framebuffer.fill(0)
+            if self.player1_score >= self.winning_score:
+                self.draw_text("Left", (0,2), fg=(215, 0, 0), hcenter=True)
+            else:
+                self.draw_text("Right", (0,2), fg=(215, 0, 0), hcenter=True)
+            self.draw_text("Won!", (0,11), fg=(215, 0, 0), hcenter=True)
 
+            return self.framebuffer
+
+        self.clear()
         if self.game_running:
 
             if not self.round_running:
