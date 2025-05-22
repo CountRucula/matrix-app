@@ -113,6 +113,7 @@ class TabGame(QWidget, Ui_TabGame):
                 self.pacman_mode.set_player_dir(Direction.DOWN)
 
     def handle_button(self, btn: int):
+        print("game btn press")
         self.snake_mode.start_pause()
         self.pacman_mode.start_stop()
         self.pong_mode.game_start()
