@@ -44,7 +44,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.controller = controller
         self.input_dev = InputDevice(self.controller)
         self.input_dev.btn_clicked.connect(self.handle_btns)
-        self.input_dev.btn_clicked.connect(self.switch_input_mode)
+        self.input_dev.btn_double_clicked.connect(self.switch_input_mode)
         self.input_dev.joystick_changed.connect(self.handle_joystick)
         self.input_dev.poti_moved.connect(self.handle_poti)
 
