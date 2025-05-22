@@ -138,10 +138,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def switch_input_mode(self, *args):
         if self.input_mode == 'game':
             self.input_mode = 'ui'
+            self.lbl_input_mode.setText('UI')
             self.widget_activated = False
             
         else:
             self.input_mode = 'game'
+            self.lbl_input_mode.setText('Game')
         
         
     def handle_btns(self, btn: int) :

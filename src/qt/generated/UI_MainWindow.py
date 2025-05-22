@@ -72,6 +72,28 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.lbl_controller_status)
 
+        self.line_5 = QFrame(self.centralwidget)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setFrameShape(QFrame.Shape.VLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout.addWidget(self.line_5)
+
+        self.label_6 = QLabel(self.centralwidget)
+        self.label_6.setObjectName(u"label_6")
+        sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy)
+        self.label_6.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout.addWidget(self.label_6)
+
+        self.lbl_input_mode = QLabel(self.centralwidget)
+        self.lbl_input_mode.setObjectName(u"lbl_input_mode")
+        sizePolicy.setHeightForWidth(self.lbl_input_mode.sizePolicy().hasHeightForWidth())
+        self.lbl_input_mode.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout.addWidget(self.lbl_input_mode)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -242,6 +264,8 @@ class Ui_MainWindow(object):
         self.lbl_matrix_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
         self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Input Mode", None))
+        self.lbl_input_mode.setText(QCoreApplication.translate("MainWindow", u"UI", None))
         self.btn_sidebar.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.btn_tab_settings.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
