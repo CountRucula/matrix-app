@@ -22,15 +22,6 @@ class Sidebar(QWidget, Ui_sidebar):
         self.btn_toggle.clicked.connect(self.hide_with_animation)
         self.btn_toggle.setProperty('class', 'transparent-bg')
 
-        icon_path = Path(__file__).parent / "../../assets/xmark.svg"
-        icon = QIcon(str(icon_path))
-        self.btn_close.setIcon(icon)
-        self.btn_close.setIconSize(QSize(20,20))
-        
-        
-    # def width(self):
-    #     return self.tabs.width()
-        
     def show_with_animation(self, index:int = 0):
         self.tabs.setCurrentRow(index)
         

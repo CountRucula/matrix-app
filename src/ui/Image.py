@@ -16,6 +16,8 @@ class TabImage(QWidget, Ui_TabImage):
         super().__init__()
         self.setupUi(self)
         self.renderer = renderer
+        
+        self.buildWidgetMap()
 
         # button callbacks
         self.btn_open_file_dialog.clicked.connect(self.openFileDialog)
@@ -28,6 +30,13 @@ class TabImage(QWidget, Ui_TabImage):
         self.mode = GifMode(width, height)
         self.mode_name = 'Image'
         self.renderer.AddMode(self.mode_name, self.mode)
+        
+    def buildWidgetMap(self):
+        self.widget_map = [[self.btn_open_file_dialog]*3,
+                           [self.btn_preview, self.btn_display]]
+        
+    def get_widget_map(self):
+        return self.widget_map
 
     def openFileDialog(self):
         dialog = QFileDialog()

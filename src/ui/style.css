@@ -12,6 +12,40 @@ QLabel#img_path {{
     padding: 5px;
 }}
 
+QSlider {{
+    padding: 10px;
+}}
+
+QSlider:focus {{
+    border: 2px solid rgb(255,255,255);
+    border-radius: 10px;
+}}
+
+QPushButton.tab-btn {{
+    height: 50px;
+    width: 70px;
+    color: {QTMATERIAL_SECONDARYTEXTCOLOR};
+    background-color: rgba(0,0,0,0);
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 5px solid {QTMATERIAL_SECONDARYCOLOR};
+}}
+
+.tab-btn:focus {{
+    background-color: rgba(255,255,255,0.1);
+    border-bottom: 5px solid rgb(215,215,215);
+}}
+
+.tab-btn:checked {{
+    color : {QTMATERIAL_PRIMARYCOLOR};
+    background-color: rgba(0,0,0,0);
+    border-bottom: 5px solid {QTMATERIAL_PRIMARYCOLOR};
+}}
+
+.tab-btn:checked:focus, QToolButton:focus {{
+    background-color: rgba(255,255,255,0.1);
+}}
+
 .mode-btn {{
     font-size: 18px;
     font-weight: bold;
@@ -20,6 +54,17 @@ QLabel#img_path {{
 .mode-btn:checked{{
     border: 0px;
     border-bottom: 12px solid {QTMATERIAL_PRIMARYCOLOR};
+}}
+
+.mode-btn:checked:focus {{
+    background-color: {QTMATERIAL_SECONDARYLIGHTCOLOR};
+    border-bottom: 12px solid {QTMATERIAL_PRIMARYCOLOR};
+}}
+
+.mode-btn:focus {{
+    background-color: rgba(0,0,0,0);
+    border: 2px solid rgb(255,255,255);
+    border-radius: 10px;
 }}
 
 .transparent-bg{{
@@ -32,4 +77,9 @@ QPushButton.transparent-bg:hover{{
 
 QPushButton.transparent-bg:focus{{
     background-color: rgba(0, 0, 0, 0);
+}}
+
+QPushButton {{
+    height: 70px;
+    width: 150px;
 }}

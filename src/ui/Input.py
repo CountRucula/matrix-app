@@ -8,8 +8,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 class InputDevice(QObject):
-    btn_pressed = Signal(int)
-    btn_released = Signal(int)
+    btn_clicked = Signal(int)
+    btn_double_clicked = Signal(int)
     joystick_changed = Signal(int, JoystickState)
     poti_moved = Signal(int, float)
 
@@ -54,25 +54,32 @@ class InputDevice(QObject):
     def poll(self):
         if not self.controller.connected():
             return
+        
+        # # if self.stick_states[0] != self.ctro
+        # new_stick_state = self.controller.get_joystick_state(0)
+        # if self.stick_states[0] != new_stick_state:
+        #     logging.info(f"joystick state changed to {new_stick_state}")
+        #     self.stick_states[0] = new_stick_state
+        #     self.joystick_changed.emit(0, new_stick_state)
 
         # handle events
         events = self.controller.get_events()
 
         for e in events:
             match e.id:
-                case Event.BtnPressed:
+                case Event.BtnClick:
                     btn = e.btn_id
-                    logging.info(f"btn {btn} pressed")
+                    logging.info(f"btn {btn} clicked")
 
-                    self.btn_states[btn] = ButtonState.Pressed
-                    self.btn_pressed.emit(btn)
+                    self.btn_states[btn] = self.controller.get_btn_state(btn)
+                    self.btn_clicked.emit(btn)
 
-                case Event.BtnReleased:
+                case Event.BtnDoubleClick:
                     btn = e.btn_id
-                    logging.info(f"btn {btn} released")
+                    logging.info(f"btn {btn} double clicked")
 
-                    self.btn_states[btn] = ButtonState.Released
-                    self.btn_released.emit(btn)
+                    self.btn_states[btn] = self.controller.get_btn_state(btn)
+                    self.btn_double_clicked.emit(btn)
 
                 case Event.JoystickChanged:
                     stick = e.stick_id
@@ -86,7 +93,7 @@ class InputDevice(QObject):
                     poti = e.poti_id
                     pos = e.pos
                     raw = e.raw
-                    logging.info(f"poti {poti} moved: {pos:.1f} , {raw}")
+                    # logging.info(f"poti {poti} moved: {pos:.1f} , {raw}")
 
                     self.poti_states[poti]['raw'] = raw
                     self.poti_states[poti]['pos'] = pos

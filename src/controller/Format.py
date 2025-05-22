@@ -28,8 +28,8 @@ class JoystickState(enum.Enum):
 
 class Event(enum.Enum):
     No                  = 0x00
-    BtnPressed          = 0x01
-    BtnReleased         = 0x02
+    BtnClick            = 0x01
+    BtnDoubleClick      = 0x02
     JoystickChanged     = 0x03
     PotiChanged         = 0x04
 
@@ -64,6 +64,7 @@ class ControllerFormat(SerialFormat):
             self.commands.GetEvents: Struct(),
             self.commands.SetLed: Struct(
                 "led_id" / Byte, 
+                "state" / Byte,
             )
         })
 
@@ -85,10 +86,10 @@ class ControllerFormat(SerialFormat):
                 "events" / PrefixedArray(Int16ul, Struct(
                     "id" / EnumAdapter(Enum(Byte, Event), Event),
                     "data" / Switch(lambda this: this.id, {
-                        Event.BtnPressed : Struct(
+                        Event.BtnClick : Struct(
                             "btn_id" / Byte
                         ),
-                        Event.BtnReleased: Struct(
+                        Event.BtnDoubleClick: Struct(
                             "btn_id" / Byte
                         ),
                         Event.JoystickChanged : Struct(

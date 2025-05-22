@@ -52,7 +52,7 @@ class Ui_TabAnimation(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 802, 717))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -231, 802, 764))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout_2 = QGridLayout()
@@ -109,6 +109,83 @@ class Ui_TabAnimation(object):
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.label_3 = QLabel(self.page_sine)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy1)
+        self.label_3.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_3.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.sld_sine_phase = QSlider(self.page_sine)
+        self.sld_sine_phase.setObjectName(u"sld_sine_phase")
+        self.sld_sine_phase.setMinimum(0)
+        self.sld_sine_phase.setMaximum(350)
+        self.sld_sine_phase.setSingleStep(10)
+        self.sld_sine_phase.setPageStep(1)
+        self.sld_sine_phase.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_3.addWidget(self.sld_sine_phase, 4, 3, 1, 1)
+
+        self.label = QLabel(self.page_sine)
+        self.label.setObjectName(u"label")
+        sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy1)
+        self.label.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_3.addWidget(self.label, 0, 0, 1, 1)
+
+        self.lbl_sine_offset = QLabel(self.page_sine)
+        self.lbl_sine_offset.setObjectName(u"lbl_sine_offset")
+        self.lbl_sine_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.lbl_sine_offset, 3, 1, 1, 1)
+
+        self.label_8 = QLabel(self.page_sine)
+        self.label_8.setObjectName(u"label_8")
+
+        self.gridLayout_3.addWidget(self.label_8, 4, 2, 1, 1)
+
+        self.lbl_sine_phase = QLabel(self.page_sine)
+        self.lbl_sine_phase.setObjectName(u"lbl_sine_phase")
+        self.lbl_sine_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.lbl_sine_phase, 4, 1, 1, 1)
+
+        self.sld_sine_offset = QSlider(self.page_sine)
+        self.sld_sine_offset.setObjectName(u"sld_sine_offset")
+        self.sld_sine_offset.setMinimum(-19)
+        self.sld_sine_offset.setMaximum(19)
+        self.sld_sine_offset.setPageStep(1)
+        self.sld_sine_offset.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_3.addWidget(self.sld_sine_offset, 3, 3, 1, 1)
+
+        self.label_10 = QLabel(self.page_sine)
+        self.label_10.setObjectName(u"label_10")
+        sizePolicy1.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy1)
+        self.label_10.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_3.addWidget(self.label_10, 3, 0, 1, 1)
+
+        self.label_32 = QLabel(self.page_sine)
+        self.label_32.setObjectName(u"label_32")
+        sizePolicy1.setHeightForWidth(self.label_32.sizePolicy().hasHeightForWidth())
+        self.label_32.setSizePolicy(sizePolicy1)
+        self.label_32.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_3.addWidget(self.label_32, 4, 0, 1, 1)
+
+        self.lbl_sine_a = QLabel(self.page_sine)
+        self.lbl_sine_a.setObjectName(u"lbl_sine_a")
+        self.lbl_sine_a.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_3.addWidget(self.lbl_sine_a, 2, 1, 1, 1)
+
         self.sld_sine_a = QSlider(self.page_sine)
         self.sld_sine_a.setObjectName(u"sld_sine_a")
         self.sld_sine_a.setMinimum(1)
@@ -118,17 +195,6 @@ class Ui_TabAnimation(object):
         self.sld_sine_a.setOrientation(Qt.Orientation.Horizontal)
 
         self.gridLayout_3.addWidget(self.sld_sine_a, 2, 3, 1, 1)
-
-        self.label_10 = QLabel(self.page_sine)
-        self.label_10.setObjectName(u"label_10")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy1)
-        self.label_10.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_3.addWidget(self.label_10, 3, 0, 1, 1)
 
         self.sld_sine_f = QSlider(self.page_sine)
         self.sld_sine_f.setObjectName(u"sld_sine_f")
@@ -151,29 +217,6 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_3.addWidget(self.lbl_sine_waves, 1, 1, 1, 1)
 
-        self.sld_sine_offset = QSlider(self.page_sine)
-        self.sld_sine_offset.setObjectName(u"sld_sine_offset")
-        self.sld_sine_offset.setMinimum(-19)
-        self.sld_sine_offset.setMaximum(19)
-        self.sld_sine_offset.setPageStep(1)
-        self.sld_sine_offset.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_3.addWidget(self.sld_sine_offset, 3, 3, 1, 1)
-
-        self.lbl_sine_a = QLabel(self.page_sine)
-        self.lbl_sine_a.setObjectName(u"lbl_sine_a")
-        self.lbl_sine_a.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_3.addWidget(self.lbl_sine_a, 2, 1, 1, 1)
-
-        self.label_5 = QLabel(self.page_sine)
-        self.label_5.setObjectName(u"label_5")
-        sizePolicy1.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy1)
-        self.label_5.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
-
         self.sld_sine_waves = QSlider(self.page_sine)
         self.sld_sine_waves.setObjectName(u"sld_sine_waves")
         self.sld_sine_waves.setMinimum(1)
@@ -189,55 +232,17 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_3.addWidget(self.lbl_sine_f, 0, 1, 1, 1)
 
-        self.label = QLabel(self.page_sine)
-        self.label.setObjectName(u"label")
-        sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy1)
-        self.label.setMinimumSize(QSize(0, 70))
+        self.label_5 = QLabel(self.page_sine)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy1.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy1)
+        self.label_5.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_3.addWidget(self.label, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
 
-        self.lbl_sine_offset = QLabel(self.page_sine)
-        self.lbl_sine_offset.setObjectName(u"lbl_sine_offset")
-        self.lbl_sine_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_3.addWidget(self.lbl_sine_offset, 3, 1, 1, 1)
-
-        self.label_3 = QLabel(self.page_sine)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy1)
-        self.label_3.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_3.addWidget(self.label_3, 1, 0, 1, 1)
-
-        self.label_32 = QLabel(self.page_sine)
-        self.label_32.setObjectName(u"label_32")
-        sizePolicy1.setHeightForWidth(self.label_32.sizePolicy().hasHeightForWidth())
-        self.label_32.setSizePolicy(sizePolicy1)
-        self.label_32.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_3.addWidget(self.label_32, 4, 0, 1, 1)
-
-        self.lbl_sine_phase = QLabel(self.page_sine)
-        self.lbl_sine_phase.setObjectName(u"lbl_sine_phase")
-        self.lbl_sine_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_3.addWidget(self.lbl_sine_phase, 4, 1, 1, 1)
-
-        self.sld_sine_phase = QSlider(self.page_sine)
-        self.sld_sine_phase.setObjectName(u"sld_sine_phase")
-        self.sld_sine_phase.setMinimum(-19)
-        self.sld_sine_phase.setMaximum(19)
-        self.sld_sine_phase.setPageStep(1)
-        self.sld_sine_phase.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_3.addWidget(self.sld_sine_phase, 4, 3, 1, 1)
-
-        self.label_8 = QLabel(self.page_sine)
-        self.label_8.setObjectName(u"label_8")
-
-        self.gridLayout_3.addWidget(self.label_8, 4, 2, 1, 1)
+        self.gridLayout_3.addItem(self.verticalSpacer_2, 5, 0, 1, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout_3, 0, 0, 1, 1)
@@ -254,6 +259,21 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.label_11, 0, 2, 1, 1)
 
+        self.sld_rect_waves = QSlider(self.page_rect)
+        self.sld_rect_waves.setObjectName(u"sld_rect_waves")
+        self.sld_rect_waves.setMinimum(1)
+        self.sld_rect_waves.setMaximum(10)
+        self.sld_rect_waves.setPageStep(1)
+        self.sld_rect_waves.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_5.addWidget(self.sld_rect_waves, 1, 3, 1, 1)
+
+        self.lbl_rect_waves = QLabel(self.page_rect)
+        self.lbl_rect_waves.setObjectName(u"lbl_rect_waves")
+        self.lbl_rect_waves.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_5.addWidget(self.lbl_rect_waves, 1, 1, 1, 1)
+
         self.label_25 = QLabel(self.page_rect)
         self.label_25.setObjectName(u"label_25")
         sizePolicy1.setHeightForWidth(self.label_25.sizePolicy().hasHeightForWidth())
@@ -262,17 +282,6 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.label_25, 5, 0, 1, 1)
 
-        self.lbl_rect_waves = QLabel(self.page_rect)
-        self.lbl_rect_waves.setObjectName(u"lbl_rect_waves")
-        self.lbl_rect_waves.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.lbl_rect_waves, 1, 1, 1, 1)
-
-        self.label_26 = QLabel(self.page_rect)
-        self.label_26.setObjectName(u"label_26")
-
-        self.gridLayout_5.addWidget(self.label_26, 5, 2, 1, 1)
-
         self.label_6 = QLabel(self.page_rect)
         self.label_6.setObjectName(u"label_6")
         sizePolicy1.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
@@ -280,6 +289,53 @@ class Ui_TabAnimation(object):
         self.label_6.setMinimumSize(QSize(0, 70))
 
         self.gridLayout_5.addWidget(self.label_6, 2, 0, 1, 1)
+
+        self.lbl_rect_phase = QLabel(self.page_rect)
+        self.lbl_rect_phase.setObjectName(u"lbl_rect_phase")
+        self.lbl_rect_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_5.addWidget(self.lbl_rect_phase, 4, 1, 1, 1)
+
+        self.lbl_rect_offset = QLabel(self.page_rect)
+        self.lbl_rect_offset.setObjectName(u"lbl_rect_offset")
+        self.lbl_rect_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_5.addWidget(self.lbl_rect_offset, 3, 1, 1, 1)
+
+        self.label_15 = QLabel(self.page_rect)
+        self.label_15.setObjectName(u"label_15")
+
+        self.gridLayout_5.addWidget(self.label_15, 4, 2, 1, 1)
+
+        self.sld_rect_phase = QSlider(self.page_rect)
+        self.sld_rect_phase.setObjectName(u"sld_rect_phase")
+        self.sld_rect_phase.setMinimum(0)
+        self.sld_rect_phase.setMaximum(359)
+        self.sld_rect_phase.setSingleStep(10)
+        self.sld_rect_phase.setPageStep(1)
+        self.sld_rect_phase.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_5.addWidget(self.sld_rect_phase, 4, 3, 1, 1)
+
+        self.lbl_rect_duty = QLabel(self.page_rect)
+        self.lbl_rect_duty.setObjectName(u"lbl_rect_duty")
+        self.lbl_rect_duty.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_5.addWidget(self.lbl_rect_duty, 5, 1, 1, 1)
+
+        self.label_26 = QLabel(self.page_rect)
+        self.label_26.setObjectName(u"label_26")
+
+        self.gridLayout_5.addWidget(self.label_26, 5, 2, 1, 1)
+
+        self.sld_rect_offset = QSlider(self.page_rect)
+        self.sld_rect_offset.setObjectName(u"sld_rect_offset")
+        self.sld_rect_offset.setMinimum(-19)
+        self.sld_rect_offset.setMaximum(19)
+        self.sld_rect_offset.setPageStep(1)
+        self.sld_rect_offset.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_5.addWidget(self.sld_rect_offset, 3, 3, 1, 1)
 
         self.sld_rect_a = QSlider(self.page_rect)
         self.sld_rect_a.setObjectName(u"sld_rect_a")
@@ -297,45 +353,6 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.lbl_rect_a, 2, 1, 1, 1)
 
-        self.label_14 = QLabel(self.page_rect)
-        self.label_14.setObjectName(u"label_14")
-        sizePolicy1.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy1)
-        self.label_14.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_5.addWidget(self.label_14, 3, 0, 1, 1)
-
-        self.sld_rect_waves = QSlider(self.page_rect)
-        self.sld_rect_waves.setObjectName(u"sld_rect_waves")
-        self.sld_rect_waves.setMinimum(1)
-        self.sld_rect_waves.setMaximum(10)
-        self.sld_rect_waves.setPageStep(1)
-        self.sld_rect_waves.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_5.addWidget(self.sld_rect_waves, 1, 3, 1, 1)
-
-        self.label_2 = QLabel(self.page_rect)
-        self.label_2.setObjectName(u"label_2")
-        sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy1)
-        self.label_2.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_5.addWidget(self.label_2, 0, 0, 1, 1)
-
-        self.lbl_rect_duty = QLabel(self.page_rect)
-        self.lbl_rect_duty.setObjectName(u"lbl_rect_duty")
-        self.lbl_rect_duty.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.lbl_rect_duty, 5, 1, 1, 1)
-
-        self.label_4 = QLabel(self.page_rect)
-        self.label_4.setObjectName(u"label_4")
-        sizePolicy1.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy1)
-        self.label_4.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_5.addWidget(self.label_4, 1, 0, 1, 1)
-
         self.sld_rect_f = QSlider(self.page_rect)
         self.sld_rect_f.setObjectName(u"sld_rect_f")
         self.sld_rect_f.setMinimum(0)
@@ -346,26 +363,13 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.sld_rect_f, 0, 3, 1, 1)
 
-        self.sld_rect_offset = QSlider(self.page_rect)
-        self.sld_rect_offset.setObjectName(u"sld_rect_offset")
-        self.sld_rect_offset.setMinimum(-19)
-        self.sld_rect_offset.setMaximum(19)
-        self.sld_rect_offset.setPageStep(1)
-        self.sld_rect_offset.setOrientation(Qt.Orientation.Horizontal)
+        self.label_2 = QLabel(self.page_rect)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy1)
+        self.label_2.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_5.addWidget(self.sld_rect_offset, 3, 3, 1, 1)
-
-        self.lbl_rect_offset = QLabel(self.page_rect)
-        self.lbl_rect_offset.setObjectName(u"lbl_rect_offset")
-        self.lbl_rect_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.lbl_rect_offset, 3, 1, 1, 1)
-
-        self.lbl_rect_f = QLabel(self.page_rect)
-        self.lbl_rect_f.setObjectName(u"lbl_rect_f")
-        self.lbl_rect_f.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.lbl_rect_f, 0, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.label_2, 0, 0, 1, 1)
 
         self.sld_rect_duty = QSlider(self.page_rect)
         self.sld_rect_duty.setObjectName(u"sld_rect_duty")
@@ -378,6 +382,12 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.sld_rect_duty, 5, 3, 1, 1)
 
+        self.lbl_rect_f = QLabel(self.page_rect)
+        self.lbl_rect_f.setObjectName(u"lbl_rect_f")
+        self.lbl_rect_f.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_5.addWidget(self.lbl_rect_f, 0, 1, 1, 1)
+
         self.label_31 = QLabel(self.page_rect)
         self.label_31.setObjectName(u"label_31")
         sizePolicy1.setHeightForWidth(self.label_31.sizePolicy().hasHeightForWidth())
@@ -386,26 +396,25 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_5.addWidget(self.label_31, 4, 0, 1, 1)
 
-        self.lbl_rect_phase = QLabel(self.page_rect)
-        self.lbl_rect_phase.setObjectName(u"lbl_rect_phase")
-        self.lbl_rect_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.label_4 = QLabel(self.page_rect)
+        self.label_4.setObjectName(u"label_4")
+        sizePolicy1.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy1)
+        self.label_4.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_5.addWidget(self.lbl_rect_phase, 4, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.label_4, 1, 0, 1, 1)
 
-        self.label_15 = QLabel(self.page_rect)
-        self.label_15.setObjectName(u"label_15")
+        self.label_14 = QLabel(self.page_rect)
+        self.label_14.setObjectName(u"label_14")
+        sizePolicy1.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
+        self.label_14.setSizePolicy(sizePolicy1)
+        self.label_14.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_5.addWidget(self.label_15, 4, 2, 1, 1)
+        self.gridLayout_5.addWidget(self.label_14, 3, 0, 1, 1)
 
-        self.sld_rect_phase = QSlider(self.page_rect)
-        self.sld_rect_phase.setObjectName(u"sld_rect_phase")
-        self.sld_rect_phase.setMinimum(0)
-        self.sld_rect_phase.setMaximum(359)
-        self.sld_rect_phase.setSingleStep(10)
-        self.sld_rect_phase.setPageStep(1)
-        self.sld_rect_phase.setOrientation(Qt.Orientation.Horizontal)
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_5.addWidget(self.sld_rect_phase, 4, 3, 1, 1)
+        self.gridLayout_5.addItem(self.verticalSpacer_4, 6, 0, 1, 1)
 
 
         self.gridLayout_6.addLayout(self.gridLayout_5, 0, 0, 1, 1)
@@ -417,6 +426,12 @@ class Ui_TabAnimation(object):
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.lbl_saw_a = QLabel(self.page_saw)
+        self.lbl_saw_a.setObjectName(u"lbl_saw_a")
+        self.lbl_saw_a.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_7.addWidget(self.lbl_saw_a, 2, 1, 1, 1)
+
         self.label_18 = QLabel(self.page_saw)
         self.label_18.setObjectName(u"label_18")
         sizePolicy1.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
@@ -424,6 +439,14 @@ class Ui_TabAnimation(object):
         self.label_18.setMinimumSize(QSize(0, 70))
 
         self.gridLayout_7.addWidget(self.label_18, 0, 0, 1, 1)
+
+        self.label_27 = QLabel(self.page_saw)
+        self.label_27.setObjectName(u"label_27")
+        sizePolicy1.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
+        self.label_27.setSizePolicy(sizePolicy1)
+        self.label_27.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_7.addWidget(self.label_27, 5, 0, 1, 1)
 
         self.sld_saw_f = QSlider(self.page_saw)
         self.sld_saw_f.setObjectName(u"sld_saw_f")
@@ -435,18 +458,41 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.sld_saw_f, 0, 3, 1, 1)
 
+        self.lbl_saw_phase = QLabel(self.page_saw)
+        self.lbl_saw_phase.setObjectName(u"lbl_saw_phase")
+        self.lbl_saw_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_7.addWidget(self.lbl_saw_phase, 4, 1, 1, 1)
+
+        self.lbl_saw_waves = QLabel(self.page_saw)
+        self.lbl_saw_waves.setObjectName(u"lbl_saw_waves")
+        self.lbl_saw_waves.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_7.addWidget(self.lbl_saw_waves, 1, 1, 1, 1)
+
+        self.label_28 = QLabel(self.page_saw)
+        self.label_28.setObjectName(u"label_28")
+
+        self.gridLayout_7.addWidget(self.label_28, 5, 2, 1, 1)
+
+        self.label_29 = QLabel(self.page_saw)
+        self.label_29.setObjectName(u"label_29")
+        sizePolicy1.setHeightForWidth(self.label_29.sizePolicy().hasHeightForWidth())
+        self.label_29.setSizePolicy(sizePolicy1)
+        self.label_29.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_7.addWidget(self.label_29, 4, 0, 1, 1)
+
         self.label_19 = QLabel(self.page_saw)
         self.label_19.setObjectName(u"label_19")
 
         self.gridLayout_7.addWidget(self.label_19, 0, 2, 1, 1)
 
-        self.label_21 = QLabel(self.page_saw)
-        self.label_21.setObjectName(u"label_21")
-        sizePolicy1.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy1)
-        self.label_21.setMinimumSize(QSize(0, 70))
+        self.lbl_saw_symmetry = QLabel(self.page_saw)
+        self.lbl_saw_symmetry.setObjectName(u"lbl_saw_symmetry")
+        self.lbl_saw_symmetry.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_7.addWidget(self.label_21, 2, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.lbl_saw_symmetry, 5, 1, 1, 1)
 
         self.sld_saw_a = QSlider(self.page_saw)
         self.sld_saw_a.setObjectName(u"sld_saw_a")
@@ -464,20 +510,6 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.lbl_saw_f, 0, 1, 1, 1)
 
-        self.label_27 = QLabel(self.page_saw)
-        self.label_27.setObjectName(u"label_27")
-        sizePolicy1.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
-        self.label_27.setSizePolicy(sizePolicy1)
-        self.label_27.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_7.addWidget(self.label_27, 5, 0, 1, 1)
-
-        self.lbl_saw_symmetry = QLabel(self.page_saw)
-        self.lbl_saw_symmetry.setObjectName(u"lbl_saw_symmetry")
-        self.lbl_saw_symmetry.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_7.addWidget(self.lbl_saw_symmetry, 5, 1, 1, 1)
-
         self.label_22 = QLabel(self.page_saw)
         self.label_22.setObjectName(u"label_22")
         sizePolicy1.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
@@ -486,19 +518,24 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.label_22, 3, 0, 1, 1)
 
-        self.label_28 = QLabel(self.page_saw)
-        self.label_28.setObjectName(u"label_28")
+        self.label_21 = QLabel(self.page_saw)
+        self.label_21.setObjectName(u"label_21")
+        sizePolicy1.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy1)
+        self.label_21.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_7.addWidget(self.label_28, 5, 2, 1, 1)
+        self.gridLayout_7.addWidget(self.label_21, 2, 0, 1, 1)
 
-        self.sld_saw_offset = QSlider(self.page_saw)
-        self.sld_saw_offset.setObjectName(u"sld_saw_offset")
-        self.sld_saw_offset.setMinimum(-19)
-        self.sld_saw_offset.setMaximum(19)
-        self.sld_saw_offset.setPageStep(1)
-        self.sld_saw_offset.setOrientation(Qt.Orientation.Horizontal)
+        self.lbl_saw_offset = QLabel(self.page_saw)
+        self.lbl_saw_offset.setObjectName(u"lbl_saw_offset")
+        self.lbl_saw_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_7.addWidget(self.sld_saw_offset, 3, 3, 1, 1)
+        self.gridLayout_7.addWidget(self.lbl_saw_offset, 3, 1, 1, 1)
+
+        self.label_30 = QLabel(self.page_saw)
+        self.label_30.setObjectName(u"label_30")
+
+        self.gridLayout_7.addWidget(self.label_30, 4, 2, 1, 1)
 
         self.sld_saw_symmetry = QSlider(self.page_saw)
         self.sld_saw_symmetry.setObjectName(u"sld_saw_symmetry")
@@ -511,32 +548,6 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.sld_saw_symmetry, 5, 3, 1, 1)
 
-        self.lbl_saw_offset = QLabel(self.page_saw)
-        self.lbl_saw_offset.setObjectName(u"lbl_saw_offset")
-        self.lbl_saw_offset.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_7.addWidget(self.lbl_saw_offset, 3, 1, 1, 1)
-
-        self.lbl_saw_waves = QLabel(self.page_saw)
-        self.lbl_saw_waves.setObjectName(u"lbl_saw_waves")
-        self.lbl_saw_waves.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_7.addWidget(self.lbl_saw_waves, 1, 1, 1, 1)
-
-        self.lbl_saw_a = QLabel(self.page_saw)
-        self.lbl_saw_a.setObjectName(u"lbl_saw_a")
-        self.lbl_saw_a.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_7.addWidget(self.lbl_saw_a, 2, 1, 1, 1)
-
-        self.label_17 = QLabel(self.page_saw)
-        self.label_17.setObjectName(u"label_17")
-        sizePolicy1.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
-        self.label_17.setSizePolicy(sizePolicy1)
-        self.label_17.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_7.addWidget(self.label_17, 1, 0, 1, 1)
-
         self.sld_saw_waves = QSlider(self.page_saw)
         self.sld_saw_waves.setObjectName(u"sld_saw_waves")
         self.sld_saw_waves.setMinimum(1)
@@ -546,19 +557,13 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.sld_saw_waves, 1, 3, 1, 1)
 
-        self.label_29 = QLabel(self.page_saw)
-        self.label_29.setObjectName(u"label_29")
-        sizePolicy1.setHeightForWidth(self.label_29.sizePolicy().hasHeightForWidth())
-        self.label_29.setSizePolicy(sizePolicy1)
-        self.label_29.setMinimumSize(QSize(0, 70))
+        self.label_17 = QLabel(self.page_saw)
+        self.label_17.setObjectName(u"label_17")
+        sizePolicy1.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
+        self.label_17.setSizePolicy(sizePolicy1)
+        self.label_17.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_7.addWidget(self.label_29, 4, 0, 1, 1)
-
-        self.lbl_saw_phase = QLabel(self.page_saw)
-        self.lbl_saw_phase.setObjectName(u"lbl_saw_phase")
-        self.lbl_saw_phase.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_7.addWidget(self.lbl_saw_phase, 4, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.label_17, 1, 0, 1, 1)
 
         self.sld_saw_phase = QSlider(self.page_saw)
         self.sld_saw_phase.setObjectName(u"sld_saw_phase")
@@ -570,10 +575,18 @@ class Ui_TabAnimation(object):
 
         self.gridLayout_7.addWidget(self.sld_saw_phase, 4, 3, 1, 1)
 
-        self.label_30 = QLabel(self.page_saw)
-        self.label_30.setObjectName(u"label_30")
+        self.sld_saw_offset = QSlider(self.page_saw)
+        self.sld_saw_offset.setObjectName(u"sld_saw_offset")
+        self.sld_saw_offset.setMinimum(-19)
+        self.sld_saw_offset.setMaximum(19)
+        self.sld_saw_offset.setPageStep(1)
+        self.sld_saw_offset.setOrientation(Qt.Orientation.Horizontal)
 
-        self.gridLayout_7.addWidget(self.label_30, 4, 2, 1, 1)
+        self.gridLayout_7.addWidget(self.sld_saw_offset, 3, 3, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer_3, 6, 0, 1, 1)
 
 
         self.gridLayout_8.addLayout(self.gridLayout_7, 0, 0, 1, 1)
@@ -596,7 +609,7 @@ class Ui_TabAnimation(object):
 
         self.retranslateUi(TabAnimation)
 
-        self.mode_settings.setCurrentIndex(2)
+        self.mode_settings.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(TabAnimation)
@@ -610,47 +623,47 @@ class Ui_TabAnimation(object):
         self.btn_mode_rect.setText(QCoreApplication.translate("TabAnimation", u"Rectangle", None))
         self.btn_mode_sawtooth.setText(QCoreApplication.translate("TabAnimation", u"Sawtooth", None))
         self.btn_mode_rainbow.setText(QCoreApplication.translate("TabAnimation", u"Rainbow", None))
-        self.label_10.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
-        self.label_7.setText(QCoreApplication.translate("TabAnimation", u"Hz", None))
-        self.lbl_sine_waves.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.lbl_sine_a.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_5.setText(QCoreApplication.translate("TabAnimation", u"Amplitude", None))
-        self.lbl_sine_f.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_3.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
         self.label.setText(QCoreApplication.translate("TabAnimation", u"Frequenz", None))
         self.lbl_sine_offset.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_3.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
-        self.label_32.setText(QCoreApplication.translate("TabAnimation", u"Phase", None))
-        self.lbl_sine_phase.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
         self.label_8.setText(QCoreApplication.translate("TabAnimation", u"\u00b0", None))
+        self.lbl_sine_phase.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_10.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
+        self.label_32.setText(QCoreApplication.translate("TabAnimation", u"Phase", None))
+        self.lbl_sine_a.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_7.setText(QCoreApplication.translate("TabAnimation", u"Hz", None))
+        self.lbl_sine_waves.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.lbl_sine_f.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_5.setText(QCoreApplication.translate("TabAnimation", u"Amplitude", None))
         self.label_11.setText(QCoreApplication.translate("TabAnimation", u"Hz", None))
-        self.label_25.setText(QCoreApplication.translate("TabAnimation", u"Duty", None))
         self.lbl_rect_waves.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_26.setText(QCoreApplication.translate("TabAnimation", u"%", None))
+        self.label_25.setText(QCoreApplication.translate("TabAnimation", u"Duty", None))
         self.label_6.setText(QCoreApplication.translate("TabAnimation", u"Amplitude", None))
-        self.lbl_rect_a.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_14.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
-        self.label_2.setText(QCoreApplication.translate("TabAnimation", u"Frequenz", None))
-        self.lbl_rect_duty.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_4.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
+        self.lbl_rect_phase.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
         self.lbl_rect_offset.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_15.setText(QCoreApplication.translate("TabAnimation", u"\u00b0", None))
+        self.lbl_rect_duty.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_26.setText(QCoreApplication.translate("TabAnimation", u"%", None))
+        self.lbl_rect_a.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_2.setText(QCoreApplication.translate("TabAnimation", u"Frequenz", None))
         self.lbl_rect_f.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
         self.label_31.setText(QCoreApplication.translate("TabAnimation", u"Phase", None))
-        self.lbl_rect_phase.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_15.setText(QCoreApplication.translate("TabAnimation", u"\u00b0", None))
-        self.label_18.setText(QCoreApplication.translate("TabAnimation", u"Frequenz", None))
-        self.label_19.setText(QCoreApplication.translate("TabAnimation", u"Hz", None))
-        self.label_21.setText(QCoreApplication.translate("TabAnimation", u"Amplitude", None))
-        self.lbl_saw_f.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_27.setText(QCoreApplication.translate("TabAnimation", u"Symmetry", None))
-        self.lbl_saw_symmetry.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_22.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
-        self.label_28.setText(QCoreApplication.translate("TabAnimation", u"%", None))
-        self.lbl_saw_offset.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.lbl_saw_waves.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
+        self.label_14.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
         self.lbl_saw_a.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
-        self.label_17.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
-        self.label_29.setText(QCoreApplication.translate("TabAnimation", u"Phase", None))
+        self.label_18.setText(QCoreApplication.translate("TabAnimation", u"Frequenz", None))
+        self.label_27.setText(QCoreApplication.translate("TabAnimation", u"Symmetry", None))
         self.lbl_saw_phase.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.lbl_saw_waves.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_28.setText(QCoreApplication.translate("TabAnimation", u"%", None))
+        self.label_29.setText(QCoreApplication.translate("TabAnimation", u"Phase", None))
+        self.label_19.setText(QCoreApplication.translate("TabAnimation", u"Hz", None))
+        self.lbl_saw_symmetry.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.lbl_saw_f.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
+        self.label_22.setText(QCoreApplication.translate("TabAnimation", u"Offset", None))
+        self.label_21.setText(QCoreApplication.translate("TabAnimation", u"Amplitude", None))
+        self.lbl_saw_offset.setText(QCoreApplication.translate("TabAnimation", u"TextLabel", None))
         self.label_30.setText(QCoreApplication.translate("TabAnimation", u"\u00b0", None))
+        self.label_17.setText(QCoreApplication.translate("TabAnimation", u"Waves", None))
     # retranslateUi
 

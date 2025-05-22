@@ -33,7 +33,39 @@ class TabAnimation(QWidget, Ui_TabAnimation):
         self.load_icons()
 
         QScroller.grabGesture(self.scrollArea.viewport(), QScroller.TouchGesture)
+        
+        # widgets
+        self.widgets_grid_sine = [[self.btn_mode_sine, self.btn_mode_rect, self.btn_mode_sawtooth, self.btn_mode_rainbow],
+                                  [self.sld_sine_f]*4,
+                                  [self.sld_sine_waves]*4,
+                                  [self.sld_sine_a]*4,
+                                  [self.sld_sine_offset]*4,
+                                  [self.sld_sine_phase]*4,
+                                  [self.btn_preview, self.btn_preview, self.btn_preview, self.btn_display]]
 
+        self.widgets_grid_rect = [[self.btn_mode_sine, self.btn_mode_rect, self.btn_mode_sawtooth, self.btn_mode_rainbow],
+                                  [self.sld_rect_f]*4,
+                                  [self.sld_rect_waves]*4,
+                                  [self.sld_rect_a]*4,
+                                  [self.sld_rect_offset]*4,
+                                  [self.sld_rect_phase]*4,
+                                  [self.sld_rect_duty]*4,
+                                  [self.btn_preview, self.btn_preview, self.btn_preview, self.btn_display]]
+
+        self.widgets_grid_saw  = [[self.btn_mode_sine, self.btn_mode_rect, self.btn_mode_sawtooth, self.btn_mode_rainbow],
+                                  [self.sld_saw_f]*4,
+                                  [self.sld_saw_waves]*4,
+                                  [self.sld_saw_a]*4,
+                                  [self.sld_saw_offset]*4,
+                                  [self.sld_saw_phase]*4,
+                                  [self.sld_saw_symmetry]*4,
+                                  [self.btn_preview, self.btn_preview, self.btn_preview, self.btn_display]]
+
+        self.widgets_grid_rain = [[self.btn_mode_sine, self.btn_mode_rect, self.btn_mode_sawtooth, self.btn_mode_rainbow],
+                                  [self.btn_preview, self.btn_preview, self.btn_preview, self.btn_display]]
+
+        self.active_widgets_grid = self.widgets_grid_sine
+        
         # register callbacks
         self.btn_mode_sine.clicked.connect(lambda: self.select_animation('Sine'))
         self.btn_mode_rect.clicked.connect(lambda: self.select_animation('Rectangle'))
@@ -69,6 +101,23 @@ class TabAnimation(QWidget, Ui_TabAnimation):
         
         # Default Selection
         self.select_animation('Sine')
+        
+    def get_widget_map(self):
+        match self.selected_animation:
+            case 'Sine':
+                return self.widgets_grid_sine
+            
+            case 'Rectangle':
+                return self.widgets_grid_rect
+            
+            case 'Sawtooth':
+                return self.widgets_grid_saw
+            
+            case 'Rainbow':
+                return self.widgets_grid_rain
+            
+            case _:
+                return [[]]
 
     def connect_param(self, slider: QSlider, label: QLabel, setter: callable, fmt: str ="{}", transform: callable = None):
         slider.sliderMoved.connect(lambda val: self.param_changed(slider, val, label, setter, fmt, transform))

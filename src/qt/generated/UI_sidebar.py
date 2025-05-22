@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLayout,
-    QListWidget, QListWidgetItem, QPushButton, QSizePolicy,
-    QSpacerItem, QToolButton, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QLayout, QListWidget,
+    QListWidgetItem, QPushButton, QSizePolicy, QSpacerItem,
+    QWidget)
 
 class Ui_sidebar(object):
     def setupUi(self, sidebar):
@@ -34,29 +34,21 @@ class Ui_sidebar(object):
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(-1, -1, -1, 0)
-        self.btn_close = QToolButton(sidebar)
-        self.btn_close.setObjectName(u"btn_close")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.btn_toggle = QPushButton(sidebar)
+        self.btn_toggle.setObjectName(u"btn_toggle")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.btn_close.sizePolicy().hasHeightForWidth())
-        self.btn_close.setSizePolicy(sizePolicy1)
+        sizePolicy1.setHeightForWidth(self.btn_toggle.sizePolicy().hasHeightForWidth())
+        self.btn_toggle.setSizePolicy(sizePolicy1)
+        self.btn_toggle.setAutoFillBackground(False)
+        self.btn_toggle.setFlat(True)
 
-        self.horizontalLayout_2.addWidget(self.btn_close)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer)
-
-
-        self.gridLayout.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.btn_toggle, 0, 1, 4, 1)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.gridLayout.addItem(self.verticalSpacer, 4, 0, 1, 1)
+        self.gridLayout.addItem(self.verticalSpacer, 3, 0, 1, 1)
 
         self.tabs = QListWidget(sidebar)
         self.tabs.setObjectName(u"tabs")
@@ -67,32 +59,16 @@ class Ui_sidebar(object):
         self.tabs.setSizePolicy(sizePolicy2)
         self.tabs.setMinimumSize(QSize(400, 0))
 
-        self.gridLayout.addWidget(self.tabs, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.tabs, 2, 0, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_3 = QSpacerItem(20, 120, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.gridLayout.addItem(self.verticalSpacer_2, 0, 0, 1, 1)
+        self.gridLayout.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
 
-        self.btn_toggle = QPushButton(sidebar)
-        self.btn_toggle.setObjectName(u"btn_toggle")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.btn_toggle.sizePolicy().hasHeightForWidth())
-        self.btn_toggle.setSizePolicy(sizePolicy3)
-        self.btn_toggle.setAutoFillBackground(False)
-        self.btn_toggle.setFlat(True)
-
-        self.gridLayout.addWidget(self.btn_toggle, 0, 1, 5, 1)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 60, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout.addItem(self.verticalSpacer_3, 2, 0, 1, 1)
-
-        self.gridLayout.setColumnStretch(1, 1)
 
         self.gridLayout_2.addLayout(self.gridLayout, 2, 0, 1, 1)
 
+        QWidget.setTabOrder(self.tabs, self.btn_toggle)
 
         self.retranslateUi(sidebar)
 
@@ -101,7 +77,6 @@ class Ui_sidebar(object):
 
     def retranslateUi(self, sidebar):
         sidebar.setWindowTitle(QCoreApplication.translate("sidebar", u"Form", None))
-        self.btn_close.setText("")
         self.btn_toggle.setText("")
     # retranslateUi
 

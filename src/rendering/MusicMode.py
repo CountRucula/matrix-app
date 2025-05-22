@@ -66,19 +66,65 @@ class TimelineMode(MusicMode):
     def __init__(self, width, height):
         super().__init__(width, height)
 
-        self.sensitivity = 75
+        self.set_sensitivity(75)
+
+        assets = (Path(__file__).parent / '../../assets').resolve()
+        self.colors = load_img(assets/'Bands-Colors.png')
+        
+    def set_sensitivity(self, sensitivity):
+        self.sensitivity = sensitivity
 
     def process_audio(self, data: np.ndarray):
-        peak = self.find_peak(data)
+        left  = data[:, 0]
+
+        peak = self.find_peak(left)
+
+        self.colors = np.roll(self.colors, -1, axis=1)
         self.draw_peak(peak, (255, 255, 255))
 
     def draw_peak(self, peak: float, color):
         self.shift_left()
 
         y_start =  self.height - int(peak * self.height // self.sensitivity)
+        y_start = max(0, min(self.height, y_start))
 
-        self.framebuffer[y_start:, -1] = color
+        self.framebuffer[y_start:, -1] = self.colors[y_start:, -1]
         self.framebuffer[:y_start, -1] = (0,0,0)
+
+class TimelineDualMode(MusicMode):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+
+        self.set_sensitivity(75)
+
+        assets = (Path(__file__).parent / '../../assets').resolve()
+        self.colors = load_img(assets/'Bands-Colors.png')
+        
+    def set_sensitivity(self, sensitivity):
+        self.sensitivity = sensitivity
+
+    def process_audio(self, data: np.ndarray):
+        left  = data[:, 0]
+        right = data[:, 1]
+
+        peak_l = self.find_peak(left)
+        peak_r = self.find_peak(right)
+
+        self.colors = np.roll(self.colors, -1, axis=1)
+        self.draw_peak(peak_l, peak_r, (255, 255, 255))
+
+    def draw_peak(self, peak_l: float, peak_r: float, color):
+        self.shift_left()
+
+        y_start =  self.height // 2 - int(peak_l * self.height // 2 // self.sensitivity)
+        y_end =  self.height // 2 + 1 + int(peak_l * self.height // 2 // self.sensitivity)
+        
+        y_start = max(0, min(self.height//2, y_start))
+        y_end = max(self.height//2, min(self.height, y_end))
+
+        self.framebuffer[:y_start, -1] = (0,0,0)
+        self.framebuffer[y_start:y_end, -1] = self.colors[y_start:y_end, -1]
+        self.framebuffer[y_end:, -1] = (0,0,0)
 
 class FrequencyBandsMode(MusicMode):
     def __init__(self, width, height):

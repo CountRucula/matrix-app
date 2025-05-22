@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QMainWindow, QSizePolicy, QSpacerItem, QStackedWidget,
-    QToolButton, QVBoxLayout, QWidget)
+    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
+    QStackedWidget, QToolButton, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -82,12 +82,73 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.line_6)
 
+        self.header_layout = QHBoxLayout()
+        self.header_layout.setSpacing(20)
+        self.header_layout.setObjectName(u"header_layout")
+        self.header_layout.setContentsMargins(-1, -1, -1, 0)
         self.btn_sidebar = QToolButton(self.centralwidget)
         self.btn_sidebar.setObjectName(u"btn_sidebar")
         self.btn_sidebar.setMinimumSize(QSize(40, 40))
         self.btn_sidebar.setAutoFillBackground(False)
 
-        self.verticalLayout.addWidget(self.btn_sidebar)
+        self.header_layout.addWidget(self.btn_sidebar)
+
+        self.btn_close = QToolButton(self.centralwidget)
+        self.btn_close.setObjectName(u"btn_close")
+        self.btn_close.setMinimumSize(QSize(40, 40))
+        self.btn_close.setAutoFillBackground(False)
+
+        self.header_layout.addWidget(self.btn_close)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(0)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, -1, -1, -1)
+        self.btn_tab_settings = QPushButton(self.centralwidget)
+        self.btn_tab_settings.setObjectName(u"btn_tab_settings")
+        self.btn_tab_settings.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_settings)
+
+        self.btn_tab_anim = QPushButton(self.centralwidget)
+        self.btn_tab_anim.setObjectName(u"btn_tab_anim")
+        self.btn_tab_anim.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_anim)
+
+        self.btn_tab_game = QPushButton(self.centralwidget)
+        self.btn_tab_game.setObjectName(u"btn_tab_game")
+        self.btn_tab_game.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_game)
+
+        self.btn_tab_music = QPushButton(self.centralwidget)
+        self.btn_tab_music.setObjectName(u"btn_tab_music")
+        self.btn_tab_music.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_music)
+
+        self.btn_tab_image = QPushButton(self.centralwidget)
+        self.btn_tab_image.setObjectName(u"btn_tab_image")
+        self.btn_tab_image.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_image)
+
+        self.btn_tab_preview = QPushButton(self.centralwidget)
+        self.btn_tab_preview.setObjectName(u"btn_tab_preview")
+        self.btn_tab_preview.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.btn_tab_preview)
+
+
+        self.header_layout.addLayout(self.horizontalLayout_2)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.header_layout.addItem(self.horizontalSpacer)
+
+
+        self.verticalLayout.addLayout(self.header_layout)
 
         self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -182,6 +243,13 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Controller Status:", None))
         self.lbl_controller_status.setText(QCoreApplication.translate("MainWindow", u"disconnected", None))
         self.btn_sidebar.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.btn_close.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.btn_tab_settings.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.btn_tab_anim.setText(QCoreApplication.translate("MainWindow", u"Animation", None))
+        self.btn_tab_game.setText(QCoreApplication.translate("MainWindow", u"Game", None))
+        self.btn_tab_music.setText(QCoreApplication.translate("MainWindow", u"Music", None))
+        self.btn_tab_image.setText(QCoreApplication.translate("MainWindow", u"Image", None))
+        self.btn_tab_preview.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Preview Mode: ", None))
         self.lbl_preview_mode.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Current Mode:", None))

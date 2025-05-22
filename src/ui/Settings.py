@@ -27,6 +27,18 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.matrix: Matrix = matrix
         self.input: InputDevice  = input_dev
         self.renderer = renderer
+        
+        # widget grid
+        self.widgets_grid = [[self.cb_matrix_ports, self.btn_refresh_ports, self.btn_matrix_connect],
+                             [self.cb_controller_ports, self.btn_refresh_ports, self.btn_controller_connect],
+                             [self.sb_gamma_red, None, self.btn_test_gamma_red],
+                             [self.sb_gamma_green, None, self.btn_test_gamma_green],
+                             [self.sb_gamma_blue, None, self.btn_test_gamma_blue],
+                             [self.sld_scale_red, None, self.btn_test_scale],
+                             [self.sld_scale_green, None, self.btn_test_scale],
+                             [self.sld_scale_blue, None, self.btn_test_scale],
+                             [self.btn_cal_poti_left_min, None, self.btn_cal_poti_left_max],
+                             [self.btn_cal_poti_right_min, None, self.btn_cal_poti_right_max]]
 
         # title
         self.lbl_matrix_conn.setProperty('class', 'title')
@@ -98,11 +110,14 @@ class TabSettings(QWidget, Ui_TabSettings):
         self.sld_scale_green.setValue(self.color_scale['green']*100)
         self.sld_scale_blue.setValue(self.color_scale['blue']*100)
 
-        self.connect_param(self.sld_scale_red, self.lbl_scale_red, lambda v: self.scaleChanged('red', v), transform=lambda v: v/100)
-        self.connect_param(self.sld_scale_green, self.lbl_scale_green, lambda v: self.scaleChanged('green', v), transform=lambda v: v/100)
-        self.connect_param(self.sld_scale_blue, self.lbl_scale_blue, lambda v: self.scaleChanged('blue', v), transform=lambda v: v/100)
+        self.connect_param(self.sld_scale_red, self.lbl_scale_red, lambda v: self.scaleChanged('red', v), fmt='{:.2f}', transform=lambda v: v/100)
+        self.connect_param(self.sld_scale_green, self.lbl_scale_green, lambda v: self.scaleChanged('green', v), fmt='{:.2f}',transform=lambda v: v/100)
+        self.connect_param(self.sld_scale_blue, self.lbl_scale_blue, lambda v: self.scaleChanged('blue', v), fmt='{:.2f}', transform=lambda v: v/100)
         
         self.btn_test_scale.clicked.connect(self.displayScaleTest)
+        
+    def get_widget_map(self):
+        return self.widgets_grid
 
     def calibrate_poti(self, poti: int, what: Literal['min', 'max']):
         raw = self.input.poti_states[poti]['raw']

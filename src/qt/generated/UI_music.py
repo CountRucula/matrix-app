@@ -57,7 +57,7 @@ class Ui_TabMusic(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -22, 622, 722))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 622, 722))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
@@ -107,12 +107,39 @@ class Ui_TabMusic(object):
         self.mode_settings.setSizePolicy(sizePolicy)
         self.page_timeline = QWidget()
         self.page_timeline.setObjectName(u"page_timeline")
-        self.gridLayout_6 = QGridLayout(self.page_timeline)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.gridLayout_5 = QGridLayout()
+        self.gridLayout_5 = QGridLayout(self.page_timeline)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_10 = QGridLayout()
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.label_6 = QLabel(self.page_timeline)
+        self.label_6.setObjectName(u"label_6")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_6.addLayout(self.gridLayout_5, 0, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.label_6, 0, 0, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_10.addItem(self.verticalSpacer_2, 1, 0, 1, 3)
+
+        self.sld_timeline_sensitivity = QSlider(self.page_timeline)
+        self.sld_timeline_sensitivity.setObjectName(u"sld_timeline_sensitivity")
+        self.sld_timeline_sensitivity.setMinimum(1)
+        self.sld_timeline_sensitivity.setMaximum(200)
+        self.sld_timeline_sensitivity.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_10.addWidget(self.sld_timeline_sensitivity, 0, 2, 1, 1)
+
+        self.lbl_timeline_sensitivity = QLabel(self.page_timeline)
+        self.lbl_timeline_sensitivity.setObjectName(u"lbl_timeline_sensitivity")
+
+        self.gridLayout_10.addWidget(self.lbl_timeline_sensitivity, 0, 1, 1, 1)
+
+
+        self.gridLayout_5.addLayout(self.gridLayout_10, 0, 0, 1, 1)
 
         self.mode_settings.addWidget(self.page_timeline)
         self.page_dual = QWidget()
@@ -121,6 +148,30 @@ class Ui_TabMusic(object):
         self.gridLayout_9.setObjectName(u"gridLayout_9")
         self.gridLayout_8 = QGridLayout()
         self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.label_5 = QLabel(self.page_dual)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy1.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_8.addWidget(self.label_5, 0, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_8.addItem(self.verticalSpacer, 1, 0, 1, 3)
+
+        self.sld_timelinedual_sensitivity = QSlider(self.page_dual)
+        self.sld_timelinedual_sensitivity.setObjectName(u"sld_timelinedual_sensitivity")
+        self.sld_timelinedual_sensitivity.setMinimum(1)
+        self.sld_timelinedual_sensitivity.setMaximum(200)
+        self.sld_timelinedual_sensitivity.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_8.addWidget(self.sld_timelinedual_sensitivity, 0, 2, 1, 1)
+
+        self.lbl_timelinedual_sensitivity = QLabel(self.page_dual)
+        self.lbl_timelinedual_sensitivity.setObjectName(u"lbl_timelinedual_sensitivity")
+
+        self.gridLayout_8.addWidget(self.lbl_timelinedual_sensitivity, 0, 1, 1, 1)
+
 
         self.gridLayout_9.addLayout(self.gridLayout_8, 0, 0, 1, 1)
 
@@ -133,70 +184,6 @@ class Ui_TabMusic(object):
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.lbl_bands_f_min = QLabel(self.page_bands)
-        self.lbl_bands_f_min.setObjectName(u"lbl_bands_f_min")
-        self.lbl_bands_f_min.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_2.addWidget(self.lbl_bands_f_min, 5, 1, 1, 1)
-
-        self.lbl_bands_bin_width = QLabel(self.page_bands)
-        self.lbl_bands_bin_width.setObjectName(u"lbl_bands_bin_width")
-        self.lbl_bands_bin_width.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_2.addWidget(self.lbl_bands_bin_width, 0, 1, 1, 1)
-
-        self.lbl_bands_a_min = QLabel(self.page_bands)
-        self.lbl_bands_a_min.setObjectName(u"lbl_bands_a_min")
-        self.lbl_bands_a_min.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_2.addWidget(self.lbl_bands_a_min, 3, 1, 1, 1)
-
-        self.label_3 = QLabel(self.page_bands)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy)
-        self.label_3.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_2.addWidget(self.label_3, 3, 0, 1, 1)
-
-        self.sld_bands_f_min = QSlider(self.page_bands)
-        self.sld_bands_f_min.setObjectName(u"sld_bands_f_min")
-        self.sld_bands_f_min.setMinimum(0)
-        self.sld_bands_f_min.setMaximum(200)
-        self.sld_bands_f_min.setSingleStep(10)
-        self.sld_bands_f_min.setValue(50)
-        self.sld_bands_f_min.setTracking(True)
-        self.sld_bands_f_min.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_2.addWidget(self.sld_bands_f_min, 5, 2, 1, 1)
-
-        self.sld_bands_spacing = QSlider(self.page_bands)
-        self.sld_bands_spacing.setObjectName(u"sld_bands_spacing")
-        self.sld_bands_spacing.setMinimum(0)
-        self.sld_bands_spacing.setMaximum(10)
-        self.sld_bands_spacing.setValue(1)
-        self.sld_bands_spacing.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_2.addWidget(self.sld_bands_spacing, 1, 2, 1, 1)
-
-        self.sld_bands_f_max = QSlider(self.page_bands)
-        self.sld_bands_f_max.setObjectName(u"sld_bands_f_max")
-        self.sld_bands_f_max.setMinimum(2000)
-        self.sld_bands_f_max.setMaximum(24000)
-        self.sld_bands_f_max.setSingleStep(2000)
-        self.sld_bands_f_max.setValue(20000)
-        self.sld_bands_f_max.setOrientation(Qt.Orientation.Horizontal)
-
-        self.gridLayout_2.addWidget(self.sld_bands_f_max, 4, 2, 1, 1)
-
-        self.label = QLabel(self.page_bands)
-        self.label.setObjectName(u"label")
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QSize(0, 70))
-
-        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
-
         self.label_7 = QLabel(self.page_bands)
         self.label_7.setObjectName(u"label_7")
         sizePolicy.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
@@ -205,15 +192,14 @@ class Ui_TabMusic(object):
 
         self.gridLayout_2.addWidget(self.label_7, 4, 0, 1, 1)
 
-        self.sld_bands_a_min = QSlider(self.page_bands)
-        self.sld_bands_a_min.setObjectName(u"sld_bands_a_min")
-        self.sld_bands_a_min.setMinimum(-100)
-        self.sld_bands_a_min.setMaximum(100)
-        self.sld_bands_a_min.setSingleStep(10)
-        self.sld_bands_a_min.setValue(-20)
-        self.sld_bands_a_min.setOrientation(Qt.Orientation.Horizontal)
+        self.sld_bands_spacing = QSlider(self.page_bands)
+        self.sld_bands_spacing.setObjectName(u"sld_bands_spacing")
+        self.sld_bands_spacing.setMinimum(0)
+        self.sld_bands_spacing.setMaximum(10)
+        self.sld_bands_spacing.setValue(1)
+        self.sld_bands_spacing.setOrientation(Qt.Orientation.Horizontal)
 
-        self.gridLayout_2.addWidget(self.sld_bands_a_min, 3, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sld_bands_spacing, 1, 3, 1, 1)
 
         self.label_8 = QLabel(self.page_bands)
         self.label_8.setObjectName(u"label_8")
@@ -223,13 +209,23 @@ class Ui_TabMusic(object):
 
         self.gridLayout_2.addWidget(self.label_8, 5, 0, 1, 1)
 
-        self.label_4 = QLabel(self.page_bands)
-        self.label_4.setObjectName(u"label_4")
-        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy)
-        self.label_4.setMinimumSize(QSize(0, 70))
+        self.label_3 = QLabel(self.page_bands)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setMinimumSize(QSize(0, 70))
 
-        self.gridLayout_2.addWidget(self.label_4, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_3, 3, 0, 1, 1)
+
+        self.sld_bands_f_max = QSlider(self.page_bands)
+        self.sld_bands_f_max.setObjectName(u"sld_bands_f_max")
+        self.sld_bands_f_max.setMinimum(2000)
+        self.sld_bands_f_max.setMaximum(24000)
+        self.sld_bands_f_max.setSingleStep(2000)
+        self.sld_bands_f_max.setValue(20000)
+        self.sld_bands_f_max.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_2.addWidget(self.sld_bands_f_max, 4, 3, 1, 1)
 
         self.sld_bands_bin_width = QSlider(self.page_bands)
         self.sld_bands_bin_width.setObjectName(u"sld_bands_bin_width")
@@ -238,7 +234,7 @@ class Ui_TabMusic(object):
         self.sld_bands_bin_width.setValue(2)
         self.sld_bands_bin_width.setOrientation(Qt.Orientation.Horizontal)
 
-        self.gridLayout_2.addWidget(self.sld_bands_bin_width, 0, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sld_bands_bin_width, 0, 3, 1, 1)
 
         self.label_2 = QLabel(self.page_bands)
         self.label_2.setObjectName(u"label_2")
@@ -248,22 +244,11 @@ class Ui_TabMusic(object):
 
         self.gridLayout_2.addWidget(self.label_2, 2, 0, 1, 1)
 
-        self.sld_bands_a_max = QSlider(self.page_bands)
-        self.sld_bands_a_max.setObjectName(u"sld_bands_a_max")
-        self.sld_bands_a_max.setMinimum(-100)
-        self.sld_bands_a_max.setMaximum(100)
-        self.sld_bands_a_max.setSingleStep(10)
-        self.sld_bands_a_max.setValue(50)
-        self.sld_bands_a_max.setOrientation(Qt.Orientation.Horizontal)
-        self.sld_bands_a_max.setTickPosition(QSlider.TickPosition.NoTicks)
+        self.lbl_bands_f_min = QLabel(self.page_bands)
+        self.lbl_bands_f_min.setObjectName(u"lbl_bands_f_min")
+        self.lbl_bands_f_min.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.sld_bands_a_max, 2, 2, 1, 1)
-
-        self.lbl_bands_f_max = QLabel(self.page_bands)
-        self.lbl_bands_f_max.setObjectName(u"lbl_bands_f_max")
-        self.lbl_bands_f_max.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_2.addWidget(self.lbl_bands_f_max, 4, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.lbl_bands_f_min, 5, 1, 1, 1)
 
         self.lbl_bands_spacing = QLabel(self.page_bands)
         self.lbl_bands_spacing.setObjectName(u"lbl_bands_spacing")
@@ -276,6 +261,92 @@ class Ui_TabMusic(object):
         self.lbl_bands_a_max.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_2.addWidget(self.lbl_bands_a_max, 2, 1, 1, 1)
+
+        self.label = QLabel(self.page_bands)
+        self.label.setObjectName(u"label")
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
+
+        self.sld_bands_a_max = QSlider(self.page_bands)
+        self.sld_bands_a_max.setObjectName(u"sld_bands_a_max")
+        self.sld_bands_a_max.setMinimum(-100)
+        self.sld_bands_a_max.setMaximum(100)
+        self.sld_bands_a_max.setSingleStep(10)
+        self.sld_bands_a_max.setValue(50)
+        self.sld_bands_a_max.setOrientation(Qt.Orientation.Horizontal)
+        self.sld_bands_a_max.setTickPosition(QSlider.TickPosition.NoTicks)
+
+        self.gridLayout_2.addWidget(self.sld_bands_a_max, 2, 3, 1, 1)
+
+        self.sld_bands_a_min = QSlider(self.page_bands)
+        self.sld_bands_a_min.setObjectName(u"sld_bands_a_min")
+        self.sld_bands_a_min.setMinimum(-100)
+        self.sld_bands_a_min.setMaximum(100)
+        self.sld_bands_a_min.setSingleStep(10)
+        self.sld_bands_a_min.setValue(-20)
+        self.sld_bands_a_min.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_2.addWidget(self.sld_bands_a_min, 3, 3, 1, 1)
+
+        self.lbl_bands_f_max = QLabel(self.page_bands)
+        self.lbl_bands_f_max.setObjectName(u"lbl_bands_f_max")
+        self.lbl_bands_f_max.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_2.addWidget(self.lbl_bands_f_max, 4, 1, 1, 1)
+
+        self.lbl_bands_a_min = QLabel(self.page_bands)
+        self.lbl_bands_a_min.setObjectName(u"lbl_bands_a_min")
+        self.lbl_bands_a_min.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_2.addWidget(self.lbl_bands_a_min, 3, 1, 1, 1)
+
+        self.label_4 = QLabel(self.page_bands)
+        self.label_4.setObjectName(u"label_4")
+        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy)
+        self.label_4.setMinimumSize(QSize(0, 70))
+
+        self.gridLayout_2.addWidget(self.label_4, 1, 0, 1, 1)
+
+        self.sld_bands_f_min = QSlider(self.page_bands)
+        self.sld_bands_f_min.setObjectName(u"sld_bands_f_min")
+        self.sld_bands_f_min.setMinimum(0)
+        self.sld_bands_f_min.setMaximum(200)
+        self.sld_bands_f_min.setSingleStep(10)
+        self.sld_bands_f_min.setValue(50)
+        self.sld_bands_f_min.setTracking(True)
+        self.sld_bands_f_min.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_2.addWidget(self.sld_bands_f_min, 5, 3, 1, 1)
+
+        self.lbl_bands_bin_width = QLabel(self.page_bands)
+        self.lbl_bands_bin_width.setObjectName(u"lbl_bands_bin_width")
+        self.lbl_bands_bin_width.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_2.addWidget(self.lbl_bands_bin_width, 0, 1, 1, 1)
+
+        self.label_9 = QLabel(self.page_bands)
+        self.label_9.setObjectName(u"label_9")
+
+        self.gridLayout_2.addWidget(self.label_9, 2, 2, 1, 1)
+
+        self.label_10 = QLabel(self.page_bands)
+        self.label_10.setObjectName(u"label_10")
+
+        self.gridLayout_2.addWidget(self.label_10, 3, 2, 1, 1)
+
+        self.label_11 = QLabel(self.page_bands)
+        self.label_11.setObjectName(u"label_11")
+
+        self.gridLayout_2.addWidget(self.label_11, 4, 2, 1, 1)
+
+        self.label_12 = QLabel(self.page_bands)
+        self.label_12.setObjectName(u"label_12")
+
+        self.gridLayout_2.addWidget(self.label_12, 5, 2, 1, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout_2, 1, 0, 1, 1)
@@ -298,7 +369,7 @@ class Ui_TabMusic(object):
 
         self.retranslateUi(TabMusic)
 
-        self.mode_settings.setCurrentIndex(2)
+        self.mode_settings.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(TabMusic)
@@ -312,17 +383,25 @@ class Ui_TabMusic(object):
         self.btn_mode_timeline_dual.setText(QCoreApplication.translate("TabMusic", u"Timeline Dual", None))
         self.btn_mode_timeline.setText(QCoreApplication.translate("TabMusic", u"Timeline", None))
         self.btn_mode_bands.setText(QCoreApplication.translate("TabMusic", u"Frequency Bands", None))
-        self.lbl_bands_f_min.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
-        self.lbl_bands_bin_width.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
-        self.lbl_bands_a_min.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
-        self.label_3.setText(QCoreApplication.translate("TabMusic", u"Min Amplitude", None))
-        self.label.setText(QCoreApplication.translate("TabMusic", u"Bin Width", None))
+        self.label_6.setText(QCoreApplication.translate("TabMusic", u"Sensitivity", None))
+        self.lbl_timeline_sensitivity.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.label_5.setText(QCoreApplication.translate("TabMusic", u"Sensitivity", None))
+        self.lbl_timelinedual_sensitivity.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
         self.label_7.setText(QCoreApplication.translate("TabMusic", u"Max Frequenz", None))
         self.label_8.setText(QCoreApplication.translate("TabMusic", u"Min Frequenz", None))
-        self.label_4.setText(QCoreApplication.translate("TabMusic", u"Spacing", None))
+        self.label_3.setText(QCoreApplication.translate("TabMusic", u"Min Amplitude", None))
         self.label_2.setText(QCoreApplication.translate("TabMusic", u"Max Amplitude", None))
-        self.lbl_bands_f_max.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.lbl_bands_f_min.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
         self.lbl_bands_spacing.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
         self.lbl_bands_a_max.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("TabMusic", u"Bin Width", None))
+        self.lbl_bands_f_max.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.lbl_bands_a_min.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("TabMusic", u"Spacing", None))
+        self.lbl_bands_bin_width.setText(QCoreApplication.translate("TabMusic", u"TextLabel", None))
+        self.label_9.setText(QCoreApplication.translate("TabMusic", u"dB", None))
+        self.label_10.setText(QCoreApplication.translate("TabMusic", u"dB", None))
+        self.label_11.setText(QCoreApplication.translate("TabMusic", u"Hz", None))
+        self.label_12.setText(QCoreApplication.translate("TabMusic", u"Hz", None))
     # retranslateUi
 

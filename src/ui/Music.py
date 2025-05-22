@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 from rendering.RenderManager import RenderManager
-from rendering.MusicMode import FrequencyBandsMode, TimelineMode
+from rendering.MusicMode import FrequencyBandsMode, TimelineMode, TimelineDualMode
 
 # genrated ui
 from qt.generated.UI_music import Ui_TabMusic
@@ -20,14 +20,16 @@ class TabMusic(QWidget, Ui_TabMusic):
         
         self.load_icons()
 
-        self.timeline_mode  = TimelineMode(width, height)
-        self.bands_mode     = FrequencyBandsMode(width, height)
+        self.timeline_mode       = TimelineMode(width, height)
+        self.timeline_dual_mode  = TimelineDualMode(width, height)
+        self.bands_mode          = FrequencyBandsMode(width, height)
 
         self.renderer.AddMode('Timeline', self.timeline_mode)
-        self.renderer.AddMode('Timeline-Dual', self.timeline_mode)
+        self.renderer.AddMode('Timeline-Dual', self.timeline_dual_mode)
         self.renderer.AddMode('Spectrum', self.bands_mode)
         
         QScroller.grabGesture(self.scrollArea.viewport(), QScroller.TouchGesture)
+        self.buildWidgetMap()
 
         # register callbacks
         self.btn_mode_timeline.clicked.connect(lambda: self.select_animation('Timeline'))
@@ -41,13 +43,47 @@ class TabMusic(QWidget, Ui_TabMusic):
         self.select_animation(mode='Timeline')
 
         # bands settings
-        self.connect_param(self.sld_bands_bin_width, self.lbl_bands_bin_width, self.bands_mode.set_bin_width, fmt="{}   ")
-        self.connect_param(self.sld_bands_spacing, self.lbl_bands_spacing, self.bands_mode.set_spacing, fmt="{}   ")
-        self.connect_param(self.sld_bands_a_max, self.lbl_bands_a_max, self.bands_mode.set_a_max, fmt="{} dB")
-        self.connect_param(self.sld_bands_a_min, self.lbl_bands_a_min, self.bands_mode.set_a_min, fmt="{} dB")
-        self.connect_param(self.sld_bands_f_max, self.lbl_bands_f_max, self.bands_mode.set_f_max, fmt="{} Hz")
-        self.connect_param(self.sld_bands_f_min, self.lbl_bands_f_min, self.bands_mode.set_f_min, fmt="{} Hz")
+        self.connect_param(self.sld_bands_bin_width, self.lbl_bands_bin_width, self.bands_mode.set_bin_width)
+        self.connect_param(self.sld_bands_spacing, self.lbl_bands_spacing, self.bands_mode.set_spacing)
+        self.connect_param(self.sld_bands_a_max, self.lbl_bands_a_max, self.bands_mode.set_a_max)
+        self.connect_param(self.sld_bands_a_min, self.lbl_bands_a_min, self.bands_mode.set_a_min)
+        self.connect_param(self.sld_bands_f_max, self.lbl_bands_f_max, self.bands_mode.set_f_max)
+        self.connect_param(self.sld_bands_f_min, self.lbl_bands_f_min, self.bands_mode.set_f_min)
         
+        # timeline settings
+        self.connect_param(self.sld_timeline_sensitivity, self.lbl_timeline_sensitivity, self.timeline_mode.set_sensitivity)
+        
+        # timeline dual settings
+        self.connect_param(self.sld_timelinedual_sensitivity, self.lbl_timelinedual_sensitivity, self.timeline_dual_mode.set_sensitivity)
+        
+    def buildWidgetMap(self):
+        self.widget_map_timeline = [[self.btn_mode_timeline, self.btn_mode_timeline_dual, self.btn_mode_bands],
+                                    [self.sld_timeline_sensitivity]*3,
+                                    [self.btn_preview, self.btn_preview, self.btn_display]]
+
+        self.widget_map_timeline_dual = [[self.btn_mode_timeline, self.btn_mode_timeline_dual, self.btn_mode_bands],
+                                    [self.sld_timelinedual_sensitivity]*3,
+                                    [self.btn_preview, self.btn_preview, self.btn_display]]
+        
+        self.widget_map_spectrum = [[self.btn_mode_timeline, self.btn_mode_timeline_dual, self.btn_mode_bands],
+                                    [self.sld_bands_bin_width]*3,
+                                    [self.sld_bands_spacing]*3,
+                                    [self.sld_bands_a_max]*3,
+                                    [self.sld_bands_a_min]*3, 
+                                    [self.sld_bands_f_max]*3,
+                                    [self.sld_bands_f_min]*3,
+                                    [self.btn_preview, self.btn_preview, self.btn_display]]
+        
+    def get_widget_map(self):
+        match self.selected_animation:
+            case 'Timeline':
+                return self.widget_map_timeline
+            
+            case 'Timeline-Dual':
+                return self.widget_map_timeline_dual
+            
+            case 'Spectrum':
+                return self.widget_map_spectrum
         
     def connect_param(self, slider: QSlider, label: QLabel, setter: callable, fmt: str ="{}"):
         slider.sliderMoved.connect(lambda val: self.param_changed(slider, val, label, setter, fmt))
@@ -81,7 +117,7 @@ class TabMusic(QWidget, Ui_TabMusic):
         self.btn_mode_bands.setIcon(icon)
         self.btn_mode_bands.setProperty('class', 'mode-btn')
 
-    def select_animation(self, mode: Literal['Timeline', 'Timeline-Dual', 'Freq-Bands']):
+    def select_animation(self, mode: Literal['Timeline', 'Timeline-Dual', 'Spectrum']):
         self.btn_mode_timeline.setChecked(False)
         self.btn_mode_timeline_dual.setChecked(False)
         self.btn_mode_bands.setChecked(False)
@@ -94,7 +130,7 @@ class TabMusic(QWidget, Ui_TabMusic):
             self.btn_mode_timeline_dual.setChecked(True)
             self.mode_settings.setCurrentIndex(1)
 
-        elif mode == 'Freq-Bands':
+        elif mode == 'Spectrum':
             self.btn_mode_bands.setChecked(True)
             self.mode_settings.setCurrentIndex(2)
 

@@ -61,7 +61,7 @@ class Matrix(Device):
         data[..., 1] = np.array((data[..., 1]/255.0)**self.gamma_green * 255)
         data[..., 2] = np.array((data[..., 2]/255.0)**self.gamma_blue  * 255)
 
-        return data.astype(dtype=np.uint8)
+        return data
 
     def display(self, data: np.ndarray):
         """Displays a frame on the matrix
@@ -91,5 +91,5 @@ class Matrix(Device):
             data[:] = data[::-1] # flip y
 
             data = data.reshape(-1, data.shape[-1])  # flatten data (rows, cols, 3) => (rows*cols, 3)
-            raw = self.format.build_cmd_set_frame(data)
+            raw = self.format.build_cmd_set_frame(data.astype(dtype=np.uint8))
             self.link.SendFrame(raw)

@@ -20,8 +20,10 @@ class TabGame(QWidget, Ui_TabGame):
 
         self.input: InputDevice = input_dev
         self.input.joystick_changed.connect(self.handle_joystick)
-        self.input.btn_pressed.connect(self.handle_button)
+        self.input.btn_clicked.connect(self.handle_button)
         self.input.poti_moved.connect(self.handle_poti)
+        
+        self.buildWidgetMap()
 
         # load game icons
         self.load_icons()
@@ -44,6 +46,13 @@ class TabGame(QWidget, Ui_TabGame):
         self.btn_pacman.clicked.connect(lambda: self.select_game('Pacman'))
         self.btn_start.clicked.connect(self.start_game)
         self.btn_preview.clicked.connect(self.preview_game)
+
+    def buildWidgetMap(self):
+        self.widget_map = [[self.btn_snake, self.btn_pong, self.btn_pacman],
+                           [self.btn_preview, self.btn_start]]
+        
+    def get_widget_map(self):
+        return self.widget_map
 
     def load_icons(self):
         assets = (Path(__file__).parent / '../../assets').resolve()

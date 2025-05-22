@@ -23,6 +23,9 @@ class TabPreview(QWidget, Ui_TabPreview):
         led_data = TabPreview.create_rainbow_matrix()
 
         self.preview_matrix.display(led_data)
+        
+    def get_widget_map(self):
+        return []
 
     def resizeEvent(self, event):
         self.preview_matrix.update_led_size()

@@ -2,6 +2,9 @@
 # Name of the branch to check
 branch="main"
 
+# name of virtual environment
+venv=.venv
+
 # Check network connectivity
 if ping -c 1 google.com &> /dev/null
 then
@@ -26,7 +29,6 @@ then
         git pull origin $branch
         
         # check if virtual enviroment exists, if not => create one
-        venv=.venv
         if ! [-d $venv/bin]
         then
             echo "Virtual enviroment does not exist."
@@ -56,4 +58,4 @@ echo "Starting the application..."
 sleep 2
 
 export DISPLAY=:0
-.venv/bin/python3 src/main.py
+$venv/bin/python3 src/main.py
