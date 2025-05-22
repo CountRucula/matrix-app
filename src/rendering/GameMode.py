@@ -54,6 +54,7 @@ class SnakeMode(RenderMode):
         self.clear()
         self.game_running = False
         self.game_over = False
+        self.game_first_start = True
 
         self.dir = Direction.RIGHT
         self.new_dir = Direction.RIGHT
